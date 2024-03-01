@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <!-- Student Information -->
+    <div>
+      <h1>{{student.studentName}}</h1>
+      <ul>
+        <li>Student Email: {{student.email}}</li>
+        {%if student.phone != null%}
+        <li>Student Phone #: {{student.phone}}</li>
+        {%endif%} {%if student.location != null%}
+        <li>Student Location: {{student.location}}</li>
+        {%endif%}
+      </ul>
+
+      <h2>Additional Information</h2>
+      <ul>
+        {%if student.howDidYouHear != null%}
+        <li>
+          How {{student.studentName}} found out about Iridium:
+          {{student.howDidYouHear}}
+        </li>
+        {%endif%} {%if student.additionalComments != null%}
+        <li>Additional Comments: {{student.additionalComments}}</li>
+        {%endif%}
+      </ul>
+    </div>
+    <!-- Number of Sessions -->
+    <div>
+      <!-- Show all tutoring sessions-->
+      <h1>{{student.studentName}}'s Tutoring Sessions</h1>
+      {% if tutoringSessionList %}
+      <ul>
+        {% for session in tutoringSessionList %}
+        <li>
+          <a href="{% url 'tutoring_student:session_details' session.id %}"
+            >{{ session }}</a
+          >
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No tutoring sessions.</p>
+      {% endif %}
+    </div>
+  </body>
+</html>

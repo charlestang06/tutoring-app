@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <!-- Show all tutoring sessions-->
+    <h1>Available Tutoring Sessions</h1>
+    {% if tutoringSessionList %}
+    <ul>
+      {% for session in tutoringSessionList %} {% if not session.was_in_the_past %}
+      <li>
+        <a href="{% url 'tutoring_student:session_details' session.id %}"
+          >{{ session }}</a
+        >
+      </li>
+      {%endif%} {% endfor %}
+    </ul>
+    {% else %}
+    <p>No tutoring sessions available.</p>
+    {% endif %}
+
+    <!-- Form to create a new tutoring session -->
+    <h1>Register for a Tutoring Session</h1>
+    <form action="{% url 'tutoring_student:register_session' %}" method="post">
+      {% csrf_token %}
+      <label for="name">Full Name</label>
+      <input type="text" name="name" id="name" value="{{name}}" required />
+
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" value="{{email}}" required />
+
+      <label for="date">Date</label>
+      <input type="date" name="date" id="date" value="{{date}}" required />
+
+      <label for="time">Time (EST)</label>
+      <input type="time" name="time" id="time" value="{{time}}" required />
+
+      <label for="duration">Duration (hours)</label>
+      <input
+        type="number"
+        name="duration"
+        id="duration"
+        value="{{duration}}"
+        required
+      />
+
+      <label for="topic">Selected Topic from Dropdown</label>
+      <select name="topic" id="topic" required>
+        <option value="Math">Math</option>
+        <option value="Science">Science</option>
+        <option value="English">English</option>
+        <option value="History">History</option>
+        <option value="Computer Science">Computer Science</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label for="description">Topic Description</label>
+      <textarea
+        type="text"
+        name="description"
+        id="description"
+        value="{{description}}"
+        required
+      ></textarea>
+
+      <label for="gradeLevel">Student Grade Level</label>
+      <input
+        rows="5"
+        cols="80"
+        type="text"
+        name="gradeLevel"
+        id="gradeLevel"
+        value="{{gradeLevel}}"
+        required
+      />
+
+      <label for="preferredPlatform">Preferred Platform</label>
+      <select name="preferredPlatform" id="preferredPlatform" required>
+        <option value="Zoom">Zoom</option>
+        <option value="Google Meet">Google Meet</option>
+      </select>
+
+      <input type="submit" value="Register" />
+    </form>
+  </body>
+</html>

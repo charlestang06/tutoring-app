@@ -1,0 +1,60 @@
+from django.db import models
+from django.utils import timezone
+from django.core.validators import MaxValueValidator
+import datetime
+
+class Student(models.Model):
+    """
+    Model for a student.
+    """
+    def __str__(self):
+        return self.studentName
+    
+    # Personal Information
+    studentName = models.CharField(max_length=100)
+    email = models.EmailField("Email Address")
+    phone = models.CharField(max_length=15, null=True)
+    location = models.CharField(max_length=100, null=True)
+    
+    # Additional Information
+    howDidYouHear = models.CharField(max_length=100, null=True)
+    additionalComments = models.TextField(null=True)
+
+class Tutor(models.Model):
+    """
+    Model for a tutor.
+    """
+    def __str__(self):
+        return self.tutorName
+    # Personal Information
+    tutorName = models.CharField(max_length=100)
+    email = models.EmailField("Email Address")
+    phone = models.CharField(max_length=15, null=True)
+    onBoardingDate = models.DateField("Date Onboarded", null=True)
+    description = models.CharField(max_length=100, null=True)
+
+class TutoringSession(models.Model):
+    """
+    Model for a tutoring session.
+    """
+    def __str__(self):
+        return self.student.studentName + " - " + str(self.date) + " - " + str(self.time) + " - " + self.subject
+    # Session Information
+    date = models.DateField("Date of Session")
+    time = models.TimeField("Time of Session")
+    duration = models.DecimalField("Duration of Session (Hours)", max_digits = 2, decimal_places = 1, validators=[MaxValueValidator(1.5)] )
+    subject = models.CharField(max_length=100)
+    description = models.TextField("Further Description of Student Needs")
+    gradeLevel = models.CharField(max_length=100)
+    preferredPlatform = models.CharField(default="Zoom", max_length=100)
+    
+    # Personal Information
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, null=True)
+    
+    # Useful Functions
+    def was_in_the_past(self):
+        return self.date < timezone.now().date()
+
+    
+    

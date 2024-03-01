@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    {% if error_message%}
+     <h3> {{ error_message }} </h3>
+    {% else %}
+    {% if tutoringSession %}
+      <h1>Thank you for registering for an Iridium Tutoring session, {{ tutoringSession.student.studentName }}!</h1>
+    {% endif %}
+    <p>Here are the details of your tutoring session:</p>
+    <ul>
+      <li><strong>Student:</strong> {{ tutoringSession.student.studentName }}</li>
+      <li><strong>Subject:</strong> {{ tutoringSession.subject }} - {{ tutoringSession.description }}</li>
+      <li><strong>Date:</strong> {{ tutoringSession.date }} - {{tutoringSession.time}} ({{tutoringSession.duration}} hours)</li>
+    </ul>
+    <p> A tutor will reach out soon about the details of your session. If you have any questions, please contact us at <a href="mailto:iridiumtutoring@gmail.com"></p>
+    <button><a href="{% url 'tutoring_student:index' %}">Back to Home</a></button>
+    {% endif %}
+  </body>
+</html>
