@@ -2,86 +2,276 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
+    <!-- Nav Bar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Iridium Tutoring</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link" href="https://www.iridiumtutoring.org">Back To Main Site</a>
+s         </div>
+        </div>
+      </div>
+    </nav>
     <!-- Show all tutoring sessions-->
-    <h1>Available Tutoring Sessions</h1>
-    {% if tutoringSessionList %}
-    <ul>
-      {% for session in tutoringSessionList %} {% if not session.was_in_the_past %}
-      <li>
-        <a href="{% url 'tutoring_student:session_details' session.id %}"
-          >{{ session }}</a
-        >
-      </li>
-      {%endif%} {% endfor %}
-    </ul>
-    {% else %}
-    <p>No tutoring sessions available.</p>
-    {% endif %}
+    <div class="container mt-3">
+      <h1 class="text-center">Available Tutoring Sessions</h1>
+      <div class="row justify-content-md-center mt-3 mb-3">
+        <div class="col"> </div>
+      {% if tutoringSessionList %}
+      <div class="list-group col-6">
+        {% for session in tutoringSessionList %} 
+        {% if not session.was_in_the_past %}
+          <a href="{% url 'tutoring_student:session_details' session.id %}" class="list-group-item list-group-item-action"
+            ><div class="d-flex w-100 row">
+              <h5 class="mb-1">{{session.student.studentName}} - {{session.subject}} (Grade {{session.gradeLevel}})</h5>
+          <small>{{session.date}} - {{session.time}} ({{session.duration}} hours)</small>
+            </div>
+          </a> <!-- <span class="badge bg-secondary">New</span> -->
+        {% endif %} {% endfor %}
+      </div>
+      {% endif %} {% if not tutoringSessionList %}
+      <p>No tutoring sessions available.</p>
+      {% endif %}
+      <div class="col"> </div>
+    </div>
+    </div>
 
     <!-- Form to create a new tutoring session -->
-    <h1>Register for a Tutoring Session</h1>
-    <form action="{% url 'tutoring_student:register_session' %}" method="post">
-      {% csrf_token %}
-      <label for="name">Full Name</label>
-      <input type="text" name="name" id="name" value="{{name}}" required />
+    <div class="container mt-3">
+      <h1 class="text-center">Register for a Tutoring Session</h1>
 
-      <label for="email">Email</label>
-      <input type="email" name="email" id="email" value="{{email}}" required />
+      <div class="row justify-content-md-center">
+        <div class="col"> </div>
+        <div class="col-6">
+        <form
+          action="{% url 'tutoring_student:register_session' %}"
+          method="post"
+          class="container mt-5"
+        >
+          {% csrf_token %}
 
-      <label for="date">Date</label>
-      <input type="date" name="date" id="date" value="{{date}}" required />
+          <div class="mb-3">
+            <label for="name" class="form-label">Full Name</label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              class="form-control"
+              value="{{name}}"
+              required
+            />
+          </div>
 
-      <label for="time">Time (EST)</label>
-      <input type="time" name="time" id="time" value="{{time}}" required />
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              class="form-control"
+              value="{{email}}"
+              required
+            />
+            <div id="emailHelp" class="form-text">Your email will not be shared with external entities.</div>
+          </div>
 
-      <label for="duration">Duration (hours)</label>
-      <input
-        type="number"
-        name="duration"
-        id="duration"
-        value="{{duration}}"
-        required
-      />
+          <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input
+              type="date"
+              name="date"
+              id="date"
+              class="form-control"
+              value="{{date}}"
+              required
+            />
+            <div id="dateHelp" class="form-text">Please schedule at least 2 days into the future.</div>
+          </div>
 
-      <label for="topic">Selected Topic from Dropdown</label>
-      <select name="topic" id="topic" required>
-        <option value="Math">Math</option>
-        <option value="Science">Science</option>
-        <option value="English">English</option>
-        <option value="History">History</option>
-        <option value="Computer Science">Computer Science</option>
-        <option value="Other">Other</option>
-      </select>
+          <div class="mb-3">
+            <label for="time" class="form-label">Time (EST)</label>
+            <input
+              type="time"
+              name="time"
+              id="time"
+              class="form-control"
+              value="{{time}}"
+              required
+            />
+            <div id="timeHelp" class="form-text">Our tutors are available from 3pm to 10pm every night.</div>
+          </div>
 
-      <label for="description">Topic Description</label>
-      <textarea
-        type="text"
-        name="description"
-        id="description"
-        value="{{description}}"
-        required
-      ></textarea>
+          <div class="mb-3">
+            <label for="duration" class="form-label">Duration (hours)</label>
+            <input
+              type="number"
+              name="duration"
+              id="duration"
+              class="form-control"
+              value="{{duration}}"
+              required
+            />
+            <div id="durationHelp" class="form-text">Most commonly, sessions are 0.5, 1, or 1.5 hours.</div>
+          </div>
 
-      <label for="gradeLevel">Student Grade Level</label>
-      <input
-        rows="5"
-        cols="80"
-        type="text"
-        name="gradeLevel"
-        id="gradeLevel"
-        value="{{gradeLevel}}"
-        required
-      />
+          <div class="mb-3">
+            <label for="topic" class="form-label"
+              >Selected Topic from Dropdown</label
+            >
+            <select name="topic" id="topic" class="form-select" required>
+              <option value="Math">Math</option>
+              <option value="Science">Science</option>
+              <option value="English">English</option>
+              <option value="History">History</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
 
-      <label for="preferredPlatform">Preferred Platform</label>
-      <select name="preferredPlatform" id="preferredPlatform" required>
-        <option value="Zoom">Zoom</option>
-        <option value="Google Meet">Google Meet</option>
-      </select>
+          <div class="mb-3">
+            <label for="description" class="form-label"
+              >Topic Description</label
+            >
+            <textarea
+              name="description"
+              id="description"
+              class="form-control"
+              required
+            >
+{{description}}</textarea
+            >
+            <div id="tiemHelp" class="form-text">Please specify the specific topic to be covered. (i.e. SAT Math - Right Angle Geometry)</div>
+          </div>
 
-      <input type="submit" value="Register" />
-    </form>
+          <div class="mb-3">
+            <label for="gradeLevel" class="form-label"
+              >Student Grade Level</label
+            >
+            <input
+              type="text"
+              name="gradeLevel"
+              id="gradeLevel"
+              class="form-control"
+              placeholder="K-12"
+              value="{{gradeLevel}}"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="preferredPlatform" class="form-label"
+              >Preferred Platform</label
+            >
+            <select
+              name="preferredPlatform"
+              id="preferredPlatform"
+              class="form-select"
+              required
+            >
+              <option value="Zoom">Zoom</option>
+              <option value="Google Meet">Google Meet</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <input type="submit" value="Register" class="btn btn-primary" />
+          </div>
+        </form>
+        </div>
+        <div class="col"> </div>
+      </div>
+
+      {% comment %}
+      <form
+        action="{% url 'tutoring_student:register_session' %}"
+        method="post"
+      >
+        {% csrf_token %}
+        <label for="name">Full Name</label>
+        <input type="text" name="name" id="name" value="{{name}}" required />
+
+        <label for="email">Email</label>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          value="{{email}}"
+          required
+        />
+
+        <label for="date">Date</label>
+        <input type="date" name="date" id="date" value="{{date}}" required />
+
+        <label for="time">Time (EST)</label>
+        <input type="time" name="time" id="time" value="{{time}}" required />
+
+        <label for="duration">Duration (hours)</label>
+        <input
+          type="number"
+          name="duration"
+          id="duration"
+          value="{{duration}}"
+          required
+        />
+
+        <label for="topic">Selected Topic from Dropdown</label>
+        <select name="topic" id="topic" required>
+          <option value="Math">Math</option>
+          <option value="Science">Science</option>
+          <option value="English">English</option>
+          <option value="History">History</option>
+          <option value="Computer Science">Computer Science</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label for="description">Topic Description</label>
+        <textarea
+          type="text"
+          name="description"
+          id="description"
+          value="{{description}}"
+          required
+        ></textarea>
+
+        <label for="gradeLevel">Student Grade Level</label>
+        <input
+          rows="5"
+          cols="80"
+          type="text"
+          name="gradeLevel"
+          id="gradeLevel"
+          value="{{gradeLevel}}"
+          required
+        />
+
+        <label for="preferredPlatform">Preferred Platform</label>
+        <select name="preferredPlatform" id="preferredPlatform" required>
+          <option value="Zoom">Zoom</option>
+          <option value="Google Meet">Google Meet</option>
+        </select>
+
+        <input type="submit" value="Register" />
+      </form>
+      {% endcomment %}
+    </div>
   </body>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+  ></script>
 </html>
