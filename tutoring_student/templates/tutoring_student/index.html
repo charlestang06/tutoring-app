@@ -11,44 +11,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
+    {% load static %}
     <!-- Nav Bar-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Iridium Tutoring</a>
+        <a class="navbar-brand" href="https://www.iridiumtutoring.org"><img src="{% static 'tutoring_student/images/iridiumbannerheader.png' %}" class="img-fluid" style="height: 3rem" alt="Iridium Tutoring Logo" /></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
             <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link" href="{% url 'tutoring_student:tutorView' %}">Tutor View</a>
             <a class="nav-link" href="https://www.iridiumtutoring.org">Back To Main Site</a>
 s         </div>
         </div>
       </div>
     </nav>
-    <!-- Show all tutoring sessions-->
-    <div class="container mt-3">
-      <h1 class="text-center">Available Tutoring Sessions</h1>
-      <div class="row justify-content-md-center mt-3 mb-3">
-        <div class="col"> </div>
-      {% if tutoringSessionList %}
-      <div class="list-group col-6">
-        {% for session in tutoringSessionList %} 
-        {% if not session.was_in_the_past %}
-          <a href="{% url 'tutoring_student:session_details' session.id %}" class="list-group-item list-group-item-action"
-            ><div class="d-flex w-100 row">
-              <h5 class="mb-1">{{session.student.studentName}} - {{session.subject}} (Grade {{session.gradeLevel}})</h5>
-          <small>{{session.date}} - {{session.time}} ({{session.duration}} hours)</small>
-            </div>
-          </a> <!-- <span class="badge bg-secondary">New</span> -->
-        {% endif %} {% endfor %}
-      </div>
-      {% endif %} {% if not tutoringSessionList %}
-      <p>No tutoring sessions available.</p>
-      {% endif %}
-      <div class="col"> </div>
-    </div>
-    </div>
 
     <!-- Form to create a new tutoring session -->
     <div class="container mt-3">

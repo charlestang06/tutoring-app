@@ -7,7 +7,7 @@ from .models import *
 
 ## index.html
 def index(request):
-    tutoringSessionList = TutoringSession.objects.order_by('date')[:10]
+    tutoringSessionList = TutoringSession.objects.order_by('date')
     context = {
         "tutoringSessionList": tutoringSessionList,
     }
@@ -15,11 +15,14 @@ def index(request):
 
 def tutorView(request):
     tutoringSessionList = TutoringSession.objects.order_by('date')
+    password = request.POST.get('password','')
+    print(password)
     context = {
         "tutoringSessionList": tutoringSessionList,
+        "password": password,
     }
     return render(request, "tutoring_student/tutorView.html", context)
-
+    
 def student_details(request, student_id):
     student = get_object_or_404(Student, pk=student_id)
     tutoringSessionList = []

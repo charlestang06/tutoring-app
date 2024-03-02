@@ -29,6 +29,7 @@ class Tutor(models.Model):
     # Personal Information
     tutorName = models.CharField(max_length=100)
     email = models.EmailField("Email Address")
+    password = models.CharField(max_length=100, default="123456")
     phone = models.CharField(max_length=15, null=True)
     onBoardingDate = models.DateField("Date Onboarded", null=True)
     description = models.CharField(max_length=100, null=True)

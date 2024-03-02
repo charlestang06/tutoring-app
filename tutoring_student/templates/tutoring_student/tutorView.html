@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    {% load static %}
+    <!-- Nav Bar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://www.iridiumtutoring.org"><img src="{% static 'tutoring_student/images/iridiumbannerheader.png' %}" class="img-fluid" style="height: 3rem" alt="Iridium Tutoring Logo" /></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link" href="{% url 'tutoring_student:index' %}">Student View</a>
+            <a class="nav-link" href="https://www.iridiumtutoring.org">Back To Main Site</a>
+s         </div>
+        </div>
+      </div>
+    </nav>
+
+    {% if password == "iridium123" %}
+    <!-- Show all tutoring sessions-->
+    <div class="container mt-3">
+      <h1 class="text-center">Available Tutoring Sessions</h1>
+      <div class="row justify-content-md-center mt-3 mb-3">
+        <div class="col"> </div>
+      {% if tutoringSessionList %}
+      <div class="list-group col-7">
+        {% for session in tutoringSessionList %} 
+        {% if not session.was_in_the_past %}
+          <a href="{% url 'tutoring_student:session_details' session.id %}" class="list-group-item list-group-item-action"
+            ><div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{session.student.studentName}} - {{session.subject}} (Grade {{session.gradeLevel}})</h5>
+              <span class="badge bg-secondary align-self-start">Available</span>
+            </div>
+              <small>{{session.date}} - {{session.time}} ({{session.duration}} hours)</small>
+            
+          </a> <!-- <span class="badge bg-secondary">New</span> -->
+        {% endif %} {% endfor %}
+      </div>
+      {% endif %} {% if not tutoringSessionList %}
+      <p>No tutoring sessions available.</p>
+      {% endif %}
+      <div class="col"> </div>
+    </div>
+    </div>
+    {% else %}
+    <!-- Password form -->
+    <div class="container mt-3">
+      <div class="row justify-content-md-center mt-3 mb-3">
+        <div class="col"> </div>
+        <div class="col-6">
+      <h1 class="text-center">Enter Password</h1>
+      <form action="{% url 'tutoring_student:tutorView' %}" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+    <div class="col"> </div>
+  </div>
+    {% endif %}
+
+</body>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+  crossorigin="anonymous"
+></script>
+</html>
