@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
 import datetime
+
 
 class Student(models.Model):
     """
@@ -11,15 +13,17 @@ class Student(models.Model):
         return self.studentName
     
     # Personal Information
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     studentName = models.CharField(max_length=100)
     email = models.EmailField("Email Address")
+    password = models.CharField(max_length=100, default="123456")
     phone = models.CharField(max_length=15, null=True)
     location = models.CharField(max_length=100, null=True)
     
     # Additional Information
     howDidYouHear = models.CharField(max_length=100, null=True)
     additionalComments = models.TextField(null=True)
-
+        
 class Tutor(models.Model):
     """
     Model for a tutor.
@@ -27,6 +31,7 @@ class Tutor(models.Model):
     def __str__(self):
         return self.tutorName
     # Personal Information
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     tutorName = models.CharField(max_length=100)
     email = models.EmailField("Email Address")
     password = models.CharField(max_length=100, default="123456")

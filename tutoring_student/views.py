@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.http import HttpResponse, Http404
+from django.contrib.auth.models import User
+from django.contrib.auth import login, logout
+from .backends import TutorBackend
 from .models import *
 
 # Create your views here.
@@ -15,13 +18,21 @@ def index(request):
 
 def tutorView(request):
     tutoringSessionList = TutoringSession.objects.order_by('date')
+    email = request.POST.get('email','')
     password = request.POST.get('password','')
-    print(password)
+    user = TutorBackend().authenticate(request, username=email, password=password)
+    if user:
+        login(request, user, backend='tutoring_student.backends.TutorBackend')
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
     context = {
         "tutoringSessionList": tutoringSessionList,
-        "password": password,
+        "user" : request.user.is_authenticated,
     }
     return render(request, "tutoring_student/tutorView.html", context)
+
+def tutor_logout(request):
+    logout(request)
+    return tutorView(request)
     
 def student_details(request, student_id):
     student = get_object_or_404(Student, pk=student_id)
@@ -52,11 +63,17 @@ def registerSession(request):
     
     student = Student.objects.filter(studentName__contains = name).first()
     if student is None:
-        student = Student(studentName=name, email=email)
+        # Create User
+        user = User.objects.create_user(username=email,
+                                 email=email,
+                                 password="123456")
+        user.save()
+        
+        # Create tutor object
+        student = Student(user=user, studentName=name, email=email)
+        
         student.save()
-    
-    # tutor =  Tutor.objects.filter(tutorName__contains = "Charles") | Tutor.objects.first()
-    
+            
     t = TutoringSession(date=date, time=time, duration=duration, subject=topic, description=description, gradeLevel=gradeLevel, preferredPlatform=preferredPlatform, student=student)
     if not TutoringSession.objects.filter(date__contains = date, time__contains = time, student = student).first() is None:
         return render(request, "tutoring_student/registerSession.html", {"tutoringSession": t, "error_message": "You already registered for a session at this time."})
