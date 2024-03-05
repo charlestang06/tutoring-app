@@ -61,7 +61,6 @@ def index(request):
     request.session["index"] = True
     return render(request, "tutoring_student/index.html", context)
 
-
 def tutorView(request):
     tutoringSessionList = TutoringSession.objects.order_by("date")
     email = request.POST.get("email", "").strip()
@@ -119,9 +118,7 @@ def studentView(request):
         "user": check_student(request.user),
         "error": error,
     }
-    print(tutoringSessionList, check_student(request.user))
     return render(request, "tutoring_student/studentView.html", context)
-
 
 @user_passes_test(check_tutor)
 def student_details(request, student_id):
@@ -139,15 +136,34 @@ def student_details(request, student_id):
         {"student": student, "tutoringSessionList": tutoringSessionList},
     )
 
+@user_passes_test(check_student)
+def session_details_student(request, session_id):
+    session = get_object_or_404(TutoringSession, pk=session_id)
+    if session is None:
+        raise Http404("Session does not exist")
+    context = {"tutoringSession": session}
+    return render(request, "tutoring_student/session-student.html", context)
 
 @user_passes_test(check_tutor)
-def tutor_details(request, tutor_id):
-    return HttpResponse("You're looking at the details of tutor %s." % tutor_id)
-
-
-@user_passes_test(check_tutor)
-def session_details(request, session_id):
-    return HttpResponse("You're looking at the details of session %s." % session_id)
+def session_details_tutor(request, session_id):
+    tutor = None
+    try:
+        tutor = Tutor.objects.get(user=request.user)
+    except Tutor.DoesNotExist:
+        tutor = None
+    session = get_object_or_404(TutoringSession, pk=session_id)
+    if session is None:
+        raise Http404("Session does not exist")
+    if request.method == "POST":
+        claim = request.POST.get('claim', '')
+        if claim == "True":
+            session.tutor = tutor
+        elif claim == "False":
+            session.tutor = None
+        session.save()
+    
+    context = {"tutoringSession": session, "tutor" : tutor}
+    return render(request, "tutoring_student/session-tutor.html", context)
 
 
 def sessionConfirmation(request):

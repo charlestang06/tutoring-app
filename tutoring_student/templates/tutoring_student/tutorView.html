@@ -9,6 +9,7 @@
       crossorigin="anonymous"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title id="title">Iridium Tutoring</title>
   </head>
   <body>
     {% load static %}
@@ -23,17 +24,20 @@
           <div class="navbar-nav">
             <a class="nav-link" href="{% url 'tutoring_student:index' %}">Home</a>
             <a class="nav-link active" aria-current="page" href="{% url 'tutoring_student:tutorView' %}">Tutor Portal</a>
-            <a class="nav-link" href="https://www.iridiumtutoring.org">Back To Main Site</a>
          </div>
         </div>
-        {% if user %}
             <!-- Align with right side of navbar -->
           <div class="nav navbar-nav ml-auto mr-0">
+            {% if not user %}
+              <a class="nav-link" href="https://www.iridiumtutoring.org">Back To Main Site</a>
+            {% endif %}
+            {% if user %}
             <a href="{% url 'tutoring_student:tutor_logout' %}">
                 <button class="btn btn-outline-light">Logout</button>
             </a>
-          </div>
             {% endif %}
+          </div>
+            
       </div>
     </nav>
 
@@ -41,16 +45,36 @@
     <!-- Show all tutoring sessions-->
     <div class="container mt-3">
       {% if tutor %}
-      <h1 class="text-center mt-5">Welcome, {{tutor.tutorName}}</h1>
+      <h1 class="text-center mt-5">Welcome, {{tutor.tutorName}}!</h1>
       {% endif %}
-      <h1 class="text-center mt-5">Current Tutoring Sessions</h1>
+      <h2 class="text-center mt-5">Your Upcoming Tutoring Sessions</h2>
+      <div class="row justify-content-md-center mt-5 mb-5">
+        <div class="col d-none d-md-block"> </div>
+      {% if tutoringSessionList %}
+      <div class="list-group col-12 col-md-7">
+        {% for session in tutoringSessionList %}
+        {% if not session.was_in_the_past and session.tutor.tutorName == tutor.tutorName and session.tutor.email == tutor.email %}
+          <a href="{% url 'tutoring_student:session_details_tutor' session.id %}" class="list-group-item list-group-item-action"
+            ><div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{session.student.studentName}} - {{session.subject}} (Grade {{session.gradeLevel}})</h5>
+            </div>
+              <small>{{session.date}} - {{session.time}} ({{session.duration}} hours)</small>
+
+          </a> 
+        {% endif %} {% endfor %}
+      </div>
+      {% endif %}
+      <div class="col d-none d-md-block"> </div>
+    </div>
+
+      <h2 class="text-center mt-5">Available Tutoring Sessions</h2>
       <div class="row justify-content-md-center mt-5 mb-5">
         <div class="col d-none d-md-block"> </div>
       {% if tutoringSessionList %}
       <div class="list-group col-12 col-md-7">
         {% for session in tutoringSessionList %}
         {% if not session.was_in_the_past %}
-          <a href="{% url 'tutoring_student:session_details' session.id %}" class="list-group-item list-group-item-action"
+          <a href="{% url 'tutoring_student:session_details_tutor' session.id %}" class="list-group-item list-group-item-action"
             ><div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">{{session.student.studentName}} - {{session.subject}} (Grade {{session.gradeLevel}})</h5>
               {% if session.tutor %}

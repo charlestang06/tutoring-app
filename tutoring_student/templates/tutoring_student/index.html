@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+  <!-- Header -->
   <head>
     <meta charset="UTF-8" />
     <link
@@ -11,8 +12,11 @@
     <title>Iridium Tutoring</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
+
+  <!-- Body -->
   <body>
     {% load static %}
+    
     <!-- Nav Bar-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
@@ -39,18 +43,18 @@
             <a class="nav-link active" aria-current="page" href="{% url 'tutoring_student:index' %}">Home</a>
             <a class="nav-link" href="{% url 'tutoring_student:studentView' %}">Student Portal</a>
             <a class="nav-link" href="{% url 'tutoring_student:tutorView' %}">Tutor Portal</a>
-            <a class="nav-link" href="https://www.iridiumtutoring.org"
-              >Back To Main Site</a
-            >
             s
           </div>
+        </div>
+        <div class="nav navbar-nav ml-auto mr-0">
+          <a class="nav-link" href="https://www.iridiumtutoring.org">Back To Main Site</a>
         </div>
       </div>
     </nav>
 
     <!-- Form to create a new tutoring session -->
     <div class="container mt-3">
-      <h1 class="text-center">Register for a Tutoring Session</h1>
+      <h1 class="text-center mt-5">Register for a Tutoring Session</h1>
 
       <div class="row justify-content-md-center">
         <div class="col d-none d-md-block"></div>
@@ -122,14 +126,26 @@
 
             <div class="mb-3">
               <label for="duration" class="form-label">Duration (hours)</label>
-              <input
+              {% comment %} <input
                 type="number"
                 name="duration"
                 id="duration"
                 class="form-control"
                 value="{{duration}}"
                 required
-              />
+              /> {% endcomment %}
+              <select
+                name="duration"
+                id="duration"
+                class="form-select"
+                type="number"
+                value={{duration}}
+                required
+              >
+                <option value="0.5">0.5</option>
+                <option value="1">1</option>
+                <option value="1.5">1.5</option>
+              </select>
               <div id="durationHelp" class="form-text">
                 Most commonly, sessions are 0.5, 1, or 1.5 hours.
               </div>
@@ -205,10 +221,22 @@
         <div class="col d-none d-md-block"></div>
       </div>
     </div>
+
+    <!-- Footer-->
+    <footer class="bg-body-tertiary text-center">
+      <div class="container p-4"></div>    
+      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2024 Copyright.
+        <a class="text-body" href="https://www.iridiumtutoring.org/">iridiumtutoring.org</a>
+      </div>
+    </footer>
   </body>
+
+  <!-- BootstrapJS -->
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"
   ></script>
+
 </html>

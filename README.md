@@ -2,7 +2,7 @@
 
 [Iridium Tutoring](https://www.iridiumtutoring.org) is a nationwide 501(c)(3) nonprofit tutoring organization serving K-12 students with free, personalized educational support in all subjects. Our mission is to provide high-quality, accessible, and equitable tutoring to students in need, regardless of their background or financial status. We are committed to helping students reach their full potential and achieve academic success.
 
-This dashboard streamlines the tutoring session registration process and tutor sign-up process to a non-Google-Sheets/Forms hosted platform. Developed by the 2024 Iridium Tutoring director team (Charles Tang). Utilizes Model-View-Template (MVT) architecture for Tutors, Students, and TutoringSessions.
+This dashboard streamlines the tutoring session registration process and tutor sign-up process to a non-Google-Sheets/Forms-hosted platform. Developed by the 2024 Iridium Tutoring director team (Charles Tang). Utilizes Model-View-Template (MVT) architecture for `Tutors`, `Students`, and `Tutoring-Sessions`.
 
 
 ## Tech Stack
@@ -13,8 +13,9 @@ This dashboard streamlines the tutoring session registration process and tutor s
 ## Features
 [x] Admin dashboard (manage tutor, student, session registrations)
 [x] Student session registration (sign up for tutoring sessions, email confirmation, automatic account generation)
-[] Student dashboard (login/logout, see past/upcoming sessions, register session, see tutor details)
-[] Tutor dashboard (login/logout, see available sessions, see historical sessions, volunteering hours, sign up for sessions, past taken sessions, add sessions)
+[x] Student dashboard (login/logout, see past/upcoming sessions, register session, see session details, see tutor details)
+[x] Tutor session dashboard (login/logout, see available sessions, see historical sessions,  sign up for sessions, past taken sessions, add session)
+[] Tutor profile dashboard (volunteering hours)
 [] Admin dashboard (sort by model, create new tutor form, create new session form)
 [] Deployed onto DigitalOcean (thanks to nonprofit credits), subdomain of iridiumtutoring.org
 

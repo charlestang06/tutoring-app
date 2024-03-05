@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <title>Iridium Tutoring</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <!-- Nav Bar-->
+    {% load static %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-inverse">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="https://www.iridiumtutoring.org"><img src="{% static 'tutoring_student/images/iridiumbannerheader.png' %}" class="img-fluid" style="height: 3rem" alt="Iridium Tutoring Logo" /></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link" href="{% url 'tutoring_student:index' %}">Home</a>
+              <a class="nav-link active" aria-current="page" href="">Tutor Portal</a>
+           </div>
+          </div>
+          
+              <!-- Align with right side of navbar -->
+            <div class="nav navbar-nav ml-auto mr-0">
+              {% if not user %}
+              <a class="nav-link" href="https://www.iridiumtutoring.org">Back To Main Site</a>
+              {% endif %}
+              {% if user %}
+              <a href="{% url 'tutoring_student:tutor_logout' %}">
+                  <button class="btn btn-outline-light">Logout</button>
+              </a>
+              {% endif %}
+            </div>
+        </div>
+      </nav>
+    <!-- End Nav Bar-->
+    <div class="container mt-lg-5">
+      {% if error_message %}
+          <div class="alert alert-danger">
+              <h3>{{ error_message }}</h3>
+          </div>
+          {% if button %}
+            <a class="btn btn-primary btn-lg" href="{% url 'tutoring_student:index' %}" role="button">Back to Home</a>
+          {% endif %}
+      {% else %}
+          {% if tutoringSession %}
+              <div class="jumbotron">
+                  <h2 class="display-4">{{ tutoringSession.student.studentName }}'s registration</h2>
+                  <p class="lead">Here are the details of your {{ tutoringSession.student.studentName }}'s session:</p>
+                  <ul>
+                      <li><strong>Student:</strong> {{ tutoringSession.student.studentName }}</li>
+                      <li><strong>Email:</strong> <a href="mailto:{{tutoringSession.student.email}}">{{tutoringSession.student.email}}</a></li>
+                      {% if tutoringSession.student.phone %}
+                      <li><strong>Phone:</strong> {{ tutoringSession.student.phone }}</li>
+                      {% endif %}
+                      <li><strong>Subject:</strong> {{ tutoringSession.subject }} - {{ tutoringSession.description }}</li>
+                      <li><strong>Date:</strong> {{ tutoringSession.date }} - {{ tutoringSession.time }} ({{ tutoringSession.duration }} hours)</li>
+                      {% if tutoringSession.tutor %}
+                      <li><strong>Tutor:</strong> {{ tutoringSession.tutor.tutorName }} - <a href="mailto:{{tutoringSession.tutor.email}}">{{tutoringSession.tutor.email}}</a></li>
+                      {% endif %}
+                  </ul>
+                  {% if not tutoringSession.tutor %}
+                  <p class="lead">You may contact the student via their email of phone number to ask any additional questions about their request. If the student asks to change the time/topic, please contact an administrator to update the session accordingly. To claim this session, press the claim session button below and follow up with an email to the student.</p>
+                  <form method="post" action="{% url 'tutoring_student:session_details_tutor' tutoringSession.id%}">
+                    {% csrf_token %}
+                    <input type="hidden" name="claim" value="True">
+                    <button type="submit" class="btn btn-primary btn-lg" role="button">Claim Session</button>
+                  </form>
+                  {% elif tutoringSession.tutor.tutorName == tutor.tutorName and tutoringSession.tutor.email == tutor.email %}
+                  <form method="post" action="{% url 'tutoring_student:session_details_tutor' tutoringSession.id%}">
+                    {% csrf_token %}
+                    <input type="hidden" name="claim" value="False">
+                    <button type="submit" class="btn btn-primary btn-lg" role="button">Unclaim Session</button>
+                  </form>
+                  {% else %}
+                  <p class="lead">{{tutoringSession.tutor.tutorName}} has signed up for this session.</p>
+                  {% endif %}
+                  <a class="btn btn-secondary btn-lg mt-3" href="{% url 'tutoring_student:tutorView' %}" role="button">Go Back</a>
+              </div>
+          {% endif %}
+      {% endif %}
+  </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</html>
