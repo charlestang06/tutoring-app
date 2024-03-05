@@ -11,7 +11,7 @@ class Student(models.Model):
     """
     def __str__(self):
         return self.studentName
-    
+
     # Personal Information
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     studentName = models.CharField(max_length=100)
@@ -19,11 +19,11 @@ class Student(models.Model):
     password = models.CharField(max_length=100, default="123456")
     phone = models.CharField(max_length=15, null=True)
     location = models.CharField(max_length=100, null=True)
-    
+
     # Additional Information
     howDidYouHear = models.CharField(max_length=100, null=True)
     additionalComments = models.TextField(null=True)
-        
+
 class Tutor(models.Model):
     """
     Model for a tutor.
@@ -53,14 +53,11 @@ class TutoringSession(models.Model):
     description = models.TextField("Further Description of Student Needs")
     gradeLevel = models.CharField(max_length=100)
     preferredPlatform = models.CharField(default="Zoom", max_length=100)
-    
+
     # Personal Information
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, null=True)
-    
+
     # Useful Functions
     def was_in_the_past(self):
         return self.date < timezone.now().date()
-
-    
-    

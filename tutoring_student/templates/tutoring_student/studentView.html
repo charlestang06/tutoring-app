@@ -22,14 +22,14 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
             <a class="nav-link" href="{% url 'tutoring_student:index' %}">Home</a>
-            <a class="nav-link active" aria-current="page" href="{% url 'tutoring_student:tutorView' %}">Tutor Portal</a>
+            <a class="nav-link active" aria-current="page" href="">Student Portal</a>
             <a class="nav-link" href="https://www.iridiumtutoring.org">Back To Main Site</a>
          </div>
         </div>
         {% if user %}
             <!-- Align with right side of navbar -->
           <div class="nav navbar-nav ml-auto mr-0">
-            <a href="{% url 'tutoring_student:tutor_logout' %}">
+            <a href="{% url 'tutoring_student:student_logout' %}">
                 <button class="btn btn-outline-light">Logout</button>
             </a>
           </div>
@@ -40,33 +40,30 @@
     {% if user %}
     <!-- Show all tutoring sessions-->
     <div class="container mt-3">
-      {% if tutor %}
-      <h1 class="text-center mt-5">Welcome, {{tutor.tutorName}}</h1>
-      {% endif %}
-      <h1 class="text-center mt-5">Current Tutoring Sessions</h1>
+      <h1 class="text-center mt-5">Your Tutoring Sessions</h1>
       <div class="row justify-content-md-center mt-5 mb-5">
         <div class="col d-none d-md-block"> </div>
       {% if tutoringSessionList %}
       <div class="list-group col-12 col-md-7">
         {% for session in tutoringSessionList %}
-        {% if not session.was_in_the_past %}
+
           <a href="{% url 'tutoring_student:session_details' session.id %}" class="list-group-item list-group-item-action"
             ><div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">{{session.student.studentName}} - {{session.subject}} (Grade {{session.gradeLevel}})</h5>
-              {% if session.tutor %}
-              <span class="badge bg-secondary align-self-start">Taken</span>
+              {% if session.was_in_the_past %}
+              <span class="badge bg-secondary align-self-start">Past</span>
               {% else %}
-              <span class="badge bg-primary align-self-start">Available</span>
+              <span class="badge bg-primary align-self-start">Upcoming</span>
               {% endif %}
 
             </div>
               <small>{{session.date}} - {{session.time}} ({{session.duration}} hours)</small>
 
-          </a> <!-- <span class="badge bg-secondary">New</span> -->
-        {% endif %} {% endfor %}
+          </a>
+        {% endfor %}
       </div>
       {% endif %} {% if not tutoringSessionList %}
-      <p>No tutoring sessions available.</p>
+      <p>No history of tutoring sessions.</p>
       {% endif %}
       <div class="col d-none d-md-block"> </div>
     </div>
@@ -77,28 +74,27 @@
       <div class="row justify-content-md-center mt-3 mb-3">
         <div class="col d-none d-md-block"> </div>
         <div class="col-12 col-md-6">
-      <h1 class="text-center">Tutor Portal</h1>
-      <form action="{% url 'tutoring_student:tutorView' %}" method="post">
+      <h1 class="text-center">Student Portal</h1>
+      <form action="{% url 'tutoring_student:studentView' %}" method="post">
         {% csrf_token %}
         <div class="mb-3">
-          <label for="password" class="form-label">Email</label>
+          <label for="name" class="form-label">Full Name</label>
+          <input type="text" class="form-control" id="name" name="name" />
+          <label for="email" class="form-label">Email</label>
           <input type="email" class="form-control" id="email" name="email" />
-          <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" name="password" />
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
 
-      {% if error %}
+    <!-- {% if error %} -->
       <div class="alert alert-danger mt-4" role="alert">
         {{error}}
       </div>
-      {% endif %}
+      <!---- {% endif %} -->
     </div>
     <div class="col d-none d-md-block"> </div>
   </div>
     {% endif %}
-
 
 </body>
 <script

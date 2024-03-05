@@ -27,6 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+EMAIL_HOST = "mail.iridiumtutoring.org"
+EMAIL_HOST_USER = "noreply@iridiumtutoring.org"
+EMAIL_HOST_PASSWORD = "123456"
+EMAIL_PORT = 587
 
 # Application definition
 
@@ -102,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Auth backends
-AUTHENTICATION_BACKENDS = ['tutoring_student.backends.TutorBackend', 'django.contrib.auth.backends.ModelBackend']
+AUTHENTICATION_BACKENDS = ['tutoring_student.backends.TutorBackend', 'tutoring_student.backends.StudentBackend', 'django.contrib.auth.backends.ModelBackend']
 
 INTERNAL_IPS = [
     # ...
