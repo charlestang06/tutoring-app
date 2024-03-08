@@ -89,11 +89,12 @@
           </a> <!-- <span class="badge bg-secondary">New</span> -->
         {% endif %} {% endfor %}
       </div>
-      {% endif %} {% if not tutoringSessionList %}
-      <p>No tutoring sessions available.</p>
       {% endif %}
       <div class="col d-none d-md-block"> </div>
     </div>
+    
+    <!-- TODO: Historical sessions + pagination -->
+    <!-- https://www.geeksforgeeks.org/how-to-add-pagination-in-django-project/-->
     </div>
     {% else %}
     <!-- Password form -->

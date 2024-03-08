@@ -17,12 +17,12 @@ class Student(models.Model):
     studentName = models.CharField(max_length=100)
     email = models.EmailField("Email Address")
     password = models.CharField(max_length=100, default="123456")
-    phone = models.CharField(max_length=15, null=True)
-    location = models.CharField(max_length=100, null=True)
+    phone = models.CharField(max_length=15, null=True, blank=True)
+    location = models.CharField(max_length=100, null=True, blank=True)
 
     # Additional Information
-    howDidYouHear = models.CharField(max_length=100, null=True)
-    additionalComments = models.TextField(null=True)
+    howDidYouHear = models.CharField(max_length=100, null=True, blank=True)
+    additionalComments = models.TextField(null=True, blank=True)
 
 class Tutor(models.Model):
     """
@@ -36,8 +36,8 @@ class Tutor(models.Model):
     email = models.EmailField("Email Address")
     password = models.CharField(max_length=100, default="123456")
     phone = models.CharField(max_length=15, null=True)
-    onBoardingDate = models.DateField("Date Onboarded", null=True)
-    description = models.CharField(max_length=100, null=True)
+    onBoardingDate = models.DateField("Date Onboarded", null=True, blank=True)
+    description = models.CharField(max_length=100, null=True, blank=True)
 
 class TutoringSession(models.Model):
     """
@@ -56,7 +56,7 @@ class TutoringSession(models.Model):
 
     # Personal Information
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, null=True)
+    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, null=True, blank=True)
 
     # Useful Functions
     def was_in_the_past(self):

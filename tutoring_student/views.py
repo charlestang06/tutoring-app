@@ -4,7 +4,7 @@ from django.http import HttpResponse, Http404
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.core.mail import send_mail
+from .utils import send_html_mail
 from .backends import TutorBackend, StudentBackend
 from .models import *
 
@@ -218,17 +218,11 @@ def sessionConfirmation(request):
             html = loader.render_to_string(
                 "tutoring_student/sessionConfirmation.html", context
             )
-            # send_mail(
-            #     "Iridium Tutoring | Tutoring Session Confirmation",
-            #     "",
-            #     "noreply@iridiumtutoring.org",
-            #     [email],
-            #     html_message=html,
-            # )
+            send_html_mail("Iridium Tutoring | Tutoring Session Confirmation", html, [email], "noreply@iridiumtutoring.org")
             t.save()
         except:
             context["error_message"] = (
-                "There was an error confirming the session. Try again or contact us for support."
+                "There was an error confirming the session or sending the email. Try again or contact us for support."
             )
     context["button"] = True
     return render(request, "tutoring_student/sessionConfirmation.html", context)
