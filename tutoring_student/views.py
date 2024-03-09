@@ -182,7 +182,7 @@ def sessionConfirmation(request):
     gradeLevel = request.POST["gradeLevel"].strip()
     preferredPlatform = request.POST["preferredPlatform"]
 
-    student = Student.objects.filter(studentName__contains=name).first()
+    student = Student.objects.filter(studentName__contains=name, email__contains=email).first()
     if student is None:
         # Create User
         user = User.objects.create_user(username=email, email=email, password="123456")
