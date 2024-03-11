@@ -10,52 +10,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
-    <!-- Student Information -->
-    <div>
-      <h1>{{student.studentName}}</h1>
-      <ul>
-        <li>Student Email: {{student.email}}</li>
-        {%if student.phone != null%}
-        <li>Student Phone #: {{student.phone}}</li>
-        {%endif%} {%if student.location != null%}
-        <li>Student Location: {{student.location}}</li>
-        {%endif%}
-      </ul>
+    {% load static %}
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-inverse">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://www.iridiumtutoring.org"><img src="{% static 'tutoring_student/images/iridiumbannerheader.png' %}" class="img-fluid" style="height: 3rem" alt="Iridium Tutoring Logo" /></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-link" href="{% url 'tutoring_student:index' %}">Home</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'tutoring_student:tutorView' %}">Tutor Portal</a>
+         </div>
+        </div>
+        
+          <!-- Align with right side of navbar -->
+          <div class="nav navbar-nav ml-auto mr-0">
+            {% if not user %}
+            <a class="nav-link" href="https://www.iridiumtutoring.org">Back To Main Site</a>
+            {% endif %}
+            {% if user %}
+            <a href="{% url 'tutoring_student:student_logout' %}">
+                <button class="btn btn-outline-light">Logout</button>
+            </a>
+            {% endif %}
+          </div>
+      </div>
+    </nav>
 
-      <h2>Additional Information</h2>
-      <ul>
-        {%if student.howDidYouHear != null%}
-        <li>
-          How {{student.studentName}} found out about Iridium:
-          {{student.howDidYouHear}}
-        </li>
-        {%endif%} {%if student.additionalComments != null%}
-        <li>Additional Comments: {{student.additionalComments}}</li>
-        {%endif%}
-      </ul>
+    <!-- Student Information -->
+    {% if user %}
+    <div class="container mt-3">
+      <div>
+      <h1 class="text-center mt-5">About {{student.studentName}}</h1>
+      <div class="jumbotron">
+        <p class="lead fw-bold">Personal Information:</p>
+            <ul>
+              <li><strong>Student:</strong> {{ student.studentName }}</li>
+              <li><strong>Email:</strong> <a  href="mailto:{{ student.email }}">{{ student.email }}</a></li>
+              {%if student.phone != null%}
+              <li><strong>Phone:</strong> {{ student.phone }}</li>
+              {% endif %}
+              {%if student.location != null%}
+              <li><strong>Student Location:</strong> {{student.location}}</li>
+              {% endif %}
+            </ul>
+            {% if student.howDidYouHear != null or student.additionalComments != null %}
+            <p class="lead">Additional Information:</p>
+            <ul>
+              {%if student.howDidYouHear != null%}
+              <li>
+                <strong>How {{student.studentName}} found out about Iridium:</strong>
+                {{student.howDidYouHear}}
+              </li>
+              {%endif%} {%if student.additionalComments != null%}
+              <li><strong>Additional Comments:</strong> {{student.additionalComments}}</li>
+              {%endif%}
+            </ul>
+            {% endif %}
+      </div>
     </div>
     <!-- Number of Sessions -->
     <div>
+      <div class="jumbotron">
       <!-- Show all tutoring sessions-->
-      <h1>{{student.studentName}}'s Tutoring Sessions</h1>
+      <p class="lead fw-bold">{{student.studentName}}'s Tutoring Sessions:</p>
+      <div class="row justify-content-md-center mt-3 mb-3">
+        <div class="col d-none d-md-block"> </div>
       {% if tutoringSessionList %}
-      <ul>
+        <div class="list-group col-12 col-md-7">
         {% for session in tutoringSessionList %}
-        <li>
-          <a href="{% url 'tutoring_student:session_details' session.id %}"
-            >{{ session }}</a
-          >
-        </li>
+          {% if not session.was_in_the_past%}
+          <a href="{% url 'tutoring_student:session_details_tutor' session.id %}" class="list-group-item list-group-item-action"
+            ><div class="d-flex w-100 justify-content-between">
+              <p class="mb-1 lead fw-bold">{{session.subject}}</p>
+              {% if session.was_in_the_past %}
+              <span class="badge bg-secondary align-self-start">Past</span>
+              {% elif session.tutor %}
+              <span class="badge bg-primary align-self-start">Upcoming (Tutor Confirmed)</span>
+              {% else %}
+              <span class="badge bg-danger align-self-start">Upcoming (Tutor Pending)</span>
+              {% endif %}
+
+        </div>
+              <small>{{session.date}} - {{session.time}} ({{session.duration}} hours), Grade: {{session.gradeLevel}}</small>
+          </a>
+          {% endif %}
         {% endfor %}
-      </ul>
-      {% else %}
-      <p>No tutoring sessions.</p>
+        </div>
+      {% endif %} {% if not tutoringSessionList %}
+      <p>No upcoming of tutoring sessions.</p>
       {% endif %}
+      <div class="col d-none d-md-block"> </div>
     </div>
+    </div>
+    </div>
+    {% endif %}
+    <a class="btn btn-secondary btn-lg" href="{{ request.META.HTTP_REFERER }}" role="button">Go Back</a>
+  </div>
+  <!-- Footer-->
+  <footer class="bg-body-tertiary text-center">
+    <div class="container p-4"></div>    
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+      © 2024 Copyright.
+      <a class="text-body" href="https://www.iridiumtutoring.org/">iridiumtutoring.org</a>
+    </div>
+  </footer>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
-    ></script>
+    ></script> 
   </body>
 </html>

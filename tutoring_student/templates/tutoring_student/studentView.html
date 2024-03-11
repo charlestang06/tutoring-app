@@ -85,7 +85,7 @@
       <div class="list-group col-12 col-md-7">
         {% for session in tutoringSessionList %}
           {% if session.was_in_the_past%}
-          <a href="" class="list-group-item list-group-item-action"
+          <a class="list-group-item list-group-item-action"
             ><div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">{{session.student.studentName}} - {{session.subject}} (Grade {{session.gradeLevel}})</h5>
               {% if session.tutor %}
@@ -133,7 +133,14 @@
     <div class="col d-none d-md-block"> </div>
   </div>
   {% endif %}
-
+<!-- Footer-->
+<footer class="bg-body-tertiary text-center">
+  <div class="container p-4"></div>    
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+    © 2024 Copyright.
+    <a class="text-body" href="https://www.iridiumtutoring.org/">iridiumtutoring.org</a>
+  </div>
+</footer>
 </body>
 <script
   src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

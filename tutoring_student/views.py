@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from datetime import timedelta
+from django.shortcuts import redirect, render, get_object_or_404
 from django.template import loader
 from django.http import HttpResponse, Http404
 from django.contrib.auth.models import User
@@ -7,10 +8,6 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .utils import send_html_mail
 from .backends import TutorBackend, StudentBackend
 from .models import *
-
-
-# Create your views here.
-
 
 ##### HELPER FUNCTIONS #####
 def check_tutor(user):
@@ -48,42 +45,57 @@ def student_logout(request):
     logout(request)
     return studentView(request)
 
+def get_tutor(request, user):
+    tutor = None
+    if check_tutor(user) or (check_tutor(request.user)):
+        tutor = Tutor.objects.get(user=request.user)
+    return tutor
+
+def get_tutoring_sessions():
+    tutoringSessionList = TutoringSession.objects.order_by("date")
+    return tutoringSessionList
+
+def get_events(tutoringSessionList):
+    events = []
+    for session in tutoringSessionList:
+        event = {
+            'title': f'{session.student.studentName} - {session.subject}',
+            'start': f'{session.date}T{session.time}',
+            'end': f'{session.date}T{session.time}',
+            'className': "taken-session" if session.tutor else "available-session",
+            'url': session.id,
+        }
+        events.append(event)
+    return events
 
 #### VIEWS ####
 
 def index(request):
-    name = request.POST.get("name", "").strip()
-    email = request.POST.get("email", "").strip()
-    password = "123456"
-    error = ""
-    tutoringSessionList = TutoringSession.objects.order_by("date")
-    context = {"tutoringSessionList": tutoringSessionList, "error": error}
+    context = {"tutoringSessionList": get_tutoring_sessions()}
     request.session["index"] = True
     return render(request, "tutoring_student/index.html", context)
 
 def tutorView(request):
-    tutoringSessionList = TutoringSession.objects.order_by("date")
+    tutoringSessionList = get_tutoring_sessions()
+    
+    # Form data + tutor auth
     email = request.POST.get("email", "").strip()
     password = request.POST.get("password", "").strip()
     error = ""
     user = TutorBackend().authenticate(request, email=email, password=password)
     if user:
         login(request, user, backend="tutoring_student.backends.TutorBackend")
-        # login(request, user, backend="django.contrib.auth.backends.ModelBackend")
     elif email == "" and password == "":
         error = "Enter your tutor credentials"
     elif email != "" and password != "":
         error = "Invalid email or password"
 
-    tutor = None
-    if check_tutor(user) or (check_tutor(request.user)):
-        tutor = Tutor.objects.get(user=request.user)
-
     context = {
         "tutoringSessionList": tutoringSessionList,
         "user": check_tutor(request.user),
         "error": error,
-        "tutor": tutor,
+        "tutor": get_tutor(request, user),
+        "events": get_events(tutoringSessionList),
     }
 
     return render(request, "tutoring_student/tutorView.html", context)
@@ -130,17 +142,27 @@ def student_details(request, student_id):
         tutoringSessionList = TutoringSession.objects.filter(student=student).order_by(
             "date"
         )
+    context = {"student": student, 
+         "tutoringSessionList": tutoringSessionList, 
+         "user" : check_tutor(request.user)}
     return render(
         request,
-        "tutoring_student/student_details.html",
-        {"student": student, "tutoringSessionList": tutoringSessionList},
+        "tutoring_student/student_details.html", 
+        context
     )
 
 @user_passes_test(check_student)
 def session_details_student(request, session_id):
     session = get_object_or_404(TutoringSession, pk=session_id)
+    # Check if sessinon exists
     if session is None:
         raise Http404("Session does not exist")
+    # Cancel button behavior
+    if request.method == "POST":
+        cancel = request.POST.get('cancel', '')
+        if cancel == "True":
+            session.delete()
+            return redirect('tutoring_student:studentView')
     context = {"tutoringSession": session}
     return render(request, "tutoring_student/session-student.html", context)
 
@@ -165,6 +187,14 @@ def session_details_tutor(request, session_id):
     context = {"tutoringSession": session, "tutor" : tutor}
     return render(request, "tutoring_student/session-tutor.html", context)
 
+@user_passes_test(check_tutor)
+def tutorProfile(request):
+    tutoringSessions = TutoringSession.objects.filter(tutor=Tutor.objects.get(user=request.user)).order_by("date")
+    context = {"tutor": Tutor.objects.get(user=request.user),
+               "tutoringSessions": tutoringSessions,
+               "user": check_tutor(request.user),
+               "hours": len(tutoringSessions) * 1.5}
+    return render(request, "tutoring_student/tutorProfile.html", context)    
 
 def sessionConfirmation(request):
     if "index" in request.session:
