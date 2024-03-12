@@ -7,6 +7,7 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
@@ -32,7 +33,7 @@
             {% endif %}
             {% if user %}
             <a href="{% url 'tutoring_student:student_logout' %}">
-                <button class="btn btn-outline-light">Logout</button>
+                <button class="btn btn-outline-light"><i class="bi bi-box-arrow-right"></i></button>
             </a>
             {% endif %}
           </div>
@@ -110,13 +111,7 @@
     <a class="btn btn-secondary btn-lg" href="{{ request.META.HTTP_REFERER }}" role="button">Go Back</a>
   </div>
   <!-- Footer-->
-  <footer class="bg-body-tertiary text-center">
-    <div class="container p-4"></div>    
-    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
-      © 2024 Copyright.
-      <a class="text-body" href="https://www.iridiumtutoring.org/">iridiumtutoring.org</a>
-    </div>
-  </footer>
+  {% include 'tutoring_student/footer.html' %}
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

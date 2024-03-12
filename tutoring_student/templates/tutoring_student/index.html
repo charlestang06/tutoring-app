@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <!-- Header -->
   <head>
     <meta charset="UTF-8" />
@@ -9,14 +9,18 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
     <title>Iridium Tutoring</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% load static %}
+    <link href="{% static 'tutoring_student/style.css' %}" rel="stylesheet" />
   </head>
 
   <!-- Body -->
   <body>
-    {% load static %}
-    
     <!-- Nav Bar-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
@@ -40,196 +44,496 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="{% url 'tutoring_student:index' %}">Home</a>
-            <a class="nav-link" href="{% url 'tutoring_student:studentView' %}">Student Portal</a>
-            <a class="nav-link" href="{% url 'tutoring_student:tutorView' %}">Tutor Portal</a>
-            s
+            <a
+              class="nav-link active fw-bold"
+              aria-current="page"
+              href="{% url 'tutoring_student:index' %}"
+              >Home</a
+            >
+            <a
+              class="nav-link fw-bold"
+              href="{% url 'tutoring_student:studentView' %}"
+              >Students</a
+            >
+            <a
+              class="nav-link fw-bold"
+              href="{% url 'tutoring_student:tutorView' %}"
+              >Tutors</a
+            >
           </div>
         </div>
         <div class="nav navbar-nav ml-auto mr-0">
-          <a class="nav-link" href="https://www.iridiumtutoring.org">Back To Main Site</a>
+          <a class="nav-link fw-bold" href="https://www.iridiumtutoring.org"
+            >Back To Main Site</a
+          >
         </div>
       </div>
     </nav>
 
-    <!-- Form to create a new tutoring session -->
-    <div class="container mt-3">
-      <h1 class="text-center mt-5">Register for a Tutoring Session</h1>
-
-      <div class="row justify-content-md-center">
-        <div class="col d-none d-md-block"></div>
-        <div class="col-12 col-md-6">
-          <form
-            action="{% url 'tutoring_student:register_session' %}"
-            method="post"
-            class="container mt-5"
-          >
-            {% csrf_token %}
-
-            <div class="mb-3">
-              <label for="name" class="form-label">Full Name</label>
-              <input
-                type="text"
-                name="name"
-                id="name"
-                class="form-control"
-                value="{{name}}"
-                required
-              />
+    <!-- Landing splash -->
+    <section class="py-6 py-xxl-10 bg-dark">
+      <div class="container">
+        <div class="row align-items-center gy-lg-6 gy-3 pt-4 pb-2">
+          <div class="pb-5 p-5">
+            <div
+              class="d-flex flex-column gap-3 text-center text-md-start pt-5 pb-5"
+            >
+              <div class=>
+              <h1 class="text-white mb-3 display-5 fw-bold">
+                Free, unlimited tutoring.
+              </h1>
+              <p class="mb-0 lead text-white">
+                Free virtual tutoring for grades K-12 scheduled one session at a
+                time. 
+              </p>
+              <p class="mb-0 lead text-white"> 
+                Unlimited sessions. No strings attached.
+              </p>
             </div>
-
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                class="form-control"
-                value="{{email}}"
-                required
-              />
-              <div id="emailHelp" class="form-text">
-                Your email will not be shared with external entities. Please use
-                the same email for your student.
-              </div>
+            <div
+              class="justify-content-md-start text-white lead"
+            >
+              <span class="fw-bold text-orange pb-4">500+</span>
+              students impacted. <span class="fw-bold text-orange pb-4">10,000+</span> sessions offered. <span class="fw-bold text-orange pb-4">100+</span> tutors nationwide.
             </div>
-
-            <div class="mb-3">
-              <label for="date" class="form-label">Date</label>
-              <input
-                type="date"
-                name="date"
-                id="date"
-                class="form-control"
-                value="{{date}}"
-                required
-              />
-              <div id="dateHelp" class="form-text">
-                Please schedule at least 2 days into the future.
-              </div>
+            <div
+              class="d-flex flex-row gap-1 pt-5 justify-content-center align-items-center text-white"
+            >
+              <a
+                href="#what_we_offer"
+                class="text-white bi bi-chevron-compact-down floating"
+              ></a>
             </div>
-
-            <div class="mb-3">
-              <label for="time" class="form-label">Time (EST)</label>
-              <input
-                type="time"
-                name="time"
-                id="time"
-                class="form-control"
-                value="{{time}}"
-                required
-              />
-              <div id="timeHelp" class="form-text">
-                Our tutors are available from 3pm to 10pm every night.
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="duration" class="form-label">Duration (hours)</label>
-              {% comment %} <input
-                type="number"
-                name="duration"
-                id="duration"
-                class="form-control"
-                value="{{duration}}"
-                required
-              /> {% endcomment %}
-              <select
-                name="duration"
-                id="duration"
-                class="form-select"
-                type="number"
-                value={{duration}}
-                required
-              >
-                <option value="0.5">0.5</option>
-                <option value="1">1</option>
-                <option value="1.5">1.5</option>
-              </select>
-              <div id="durationHelp" class="form-text">
-                Most commonly, sessions are 0.5, 1, or 1.5 hours.
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="topic" class="form-label"
-                >Selected Topic from Dropdown</label
-              >
-              <select name="topic" id="topic" class="form-select" required>
-                <option value="Math">Math</option>
-                <option value="Science">Science</option>
-                <option value="English">English</option>
-                <option value="History">History</option>
-                <option value="Computer Science">Computer Science</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            <div class="mb-3">
-              <label for="description" class="form-label"
-                >Topic Description</label
-              >
-              <textarea
-                name="description"
-                id="description"
-                class="form-control"
-                required
-              >
-{{description}}</textarea
-              >
-              <div id="tiemHelp" class="form-text">
-                Please specify the specific topic to be covered. (i.e. SAT Math
-                - Right Angle Geometry)
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="gradeLevel" class="form-label"
-                >Student Grade Level</label
-              >
-              <input
-                type="text"
-                name="gradeLevel"
-                id="gradeLevel"
-                class="form-control"
-                placeholder="K-12"
-                value="{{gradeLevel}}"
-                required
-              />
-            </div>
-
-            <div class="mb-3">
-              <label for="preferredPlatform" class="form-label"
-                >Preferred Platform</label
-              >
-              <select
-                name="preferredPlatform"
-                id="preferredPlatform"
-                class="form-select"
-                required
-              >
-                <option value="Zoom">Zoom</option>
-                <option value="Google Meet">Google Meet</option>
-              </select>
-            </div>
-
-            <div class="mb-3">
-              <input type="submit" value="Register" class="btn btn-primary" />
-            </div>
-          </form>
+          </div>
         </div>
-        <div class="col d-none d-md-block"></div>
       </div>
-    </div>
+    </section>
 
-    <!-- Footer-->
-    <footer class="bg-body-tertiary text-center">
-      <div class="container p-4"></div>    
-      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
-        © 2024 Copyright.
-        <a class="text-body" href="https://www.iridiumtutoring.org/">iridiumtutoring.org</a>
+    <!-- Offerings-->
+    <section class="pb-3" style="background-color: #eae9ec">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="text-center pb-3">
+              <p id="what_we_offer" class="mt-5 mb-5 display-5 fw-bold">
+                What We Offer
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="row gy-6 pb-3">
+          <div class="col-lg-4 col-md-6 mb-3">
+            <div>
+              <div class="mb-4">
+                <i class="bi bi-plus-slash-minus big-icon"></i>
+              </div>
+              <div>
+                <h3 class="h4">Curricular Subjects</h3>
+                <p class="mb-0">
+                  We can help in all of your subject needs in Math, English,
+                  US/World History, Sciences.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 mb-3">
+            <div>
+              <div class="mb-4">
+                <i class="bi bi-file-richtext big-icon"></i>
+              </div>
+              <div>
+                <h3 class="h4">Standardized Testing</h3>
+                <p class="mb-0">
+                  Our tutors would be happy to help with SAT Math + EBRW Prep,
+                  AP Subjects + MCQ/FRQ Prep
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div>
+              <div class="mb-4">
+                <i class="bi bi-award big-icon"></i>
+              </div>
+              <div>
+                <h3 class="h4">Olympiad / College Apps</h3>
+                <p class="mb-0">
+                  Our tutors are well-versed in the college-app process and
+                  various olympiads, including USACO, AMC, and AIME.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </footer>
+    </section>
+
+    <!-- Form to create a new tutoring session -->
+    <section style="background-color: #eae9ec">
+      <div class="container">
+        <h1 class="text-center pt-5 fw-bold" id="register_header">
+          Register for a Tutoring Session
+        </h1>
+
+        <div class="row justify-content-md-center">
+          <div class="col d-none d-md-block"></div>
+          <div class="col-12 col-md-6">
+            <form
+              action="{% url 'tutoring_student:register_session' %}"
+              method="post"
+              class="container mt-5"
+            >
+              {% csrf_token %}
+
+              <div class="mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  class="form-control"
+                  value="{{name}}"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  class="form-control"
+                  value="{{email}}"
+                  required
+                />
+                <div id="emailHelp" class="form-text">
+                  Your email will not be shared with external entities. Please
+                  use the same email for your student.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input
+                  type="date"
+                  name="date"
+                  id="date"
+                  class="form-control"
+                  value="{{date}}"
+                  min="{{minDate}}"
+                  max="{{maxDate}}"
+                  required
+                />
+                <div id="dateHelp" class="form-text">
+                  Please schedule at least 2 days into the future.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="time" class="form-label">Time (EST)</label>
+                <input
+                  type="time"
+                  name="time"
+                  id="time"
+                  class="form-control"
+                  value="{{time}}"
+                  max="21:30"
+                  min="08:00"
+                  required
+                />
+                <div id="timeHelp" class="form-text">
+                  Our tutors are available from 3pm to 10pm weekdays, 8am-10pm
+                  weekends.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="duration" class="form-label"
+                  >Duration (hours)</label
+                >
+                <select
+                  name="duration"
+                  id="duration"
+                  class="form-select"
+                  type="number"
+                  value="{{duration}}"
+                  required
+                >
+                  <option value="0.5">0.5</option>
+                  <option value="1">1</option>
+                  <option value="1.5">1.5</option>
+                </select>
+                <div id="durationHelp" class="form-text">
+                  Most commonly, sessions are 0.5, 1, or 1.5 hours.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="topic" class="form-label"
+                  >Selected Topic from Dropdown</label
+                >
+                <select name="topic" id="topic" class="form-select" required>
+                  <option value="Math">Math</option>
+                  <option value="Science">Science</option>
+                  <option value="English">English</option>
+                  <option value="History">History</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Computer Science">
+                    Standardized Tests (SAT/AP)
+                  </option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="description" class="form-label"
+                  >Topic Description</label
+                >
+                <textarea
+                  name="description"
+                  id="description"
+                  class="form-control"
+                  required
+                >
+{{description}}</textarea
+                >
+                <div id="tiemHelp" class="form-text">
+                  Please specify the specific topic to be covered. (i.e. SAT
+                  Math - Right Angle Geometry)
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="gradeLevel" class="form-label"
+                  >Student Grade Level</label
+                >
+                <input
+                  type="text"
+                  name="gradeLevel"
+                  id="gradeLevel"
+                  class="form-control"
+                  placeholder="K-12"
+                  value="{{gradeLevel}}"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="preferredPlatform" class="form-label"
+                  >Preferred Platform</label
+                >
+                <select
+                  name="preferredPlatform"
+                  id="preferredPlatform"
+                  class="form-select"
+                  required
+                >
+                  <option value="Zoom">Zoom</option>
+                  <option value="Google Meet">Google Meet</option>
+                </select>
+              </div>
+
+              <div class="mb-3 d-flex align-items-center">
+                <label for="sendMail" class="form-label mb-0"
+                  >Send Confirmation Email?</label
+                >
+                <input
+                  class="form-check-input mx-3"
+                  style="height: 25px; width: 25px"
+                  name="sendMail"
+                  type="checkbox"
+                  id="sendMail"
+                />
+              </div>
+
+              <div class="mb-3 pb-4">
+                <input
+                  type="submit"
+                  value="Register"
+                  class="btn btn-dark-purple rounded-pill text-white fw-bold"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="col d-none d-md-block"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reviews -->
+    <section class="py-lg-14 py-6 p-4 bg-light-orange">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="text-center mb-8">
+              <h1 class="mt-4 fw-bold mb-4">Testimonials</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row gy-5 pb-5">
+          <div class="col-md-6 pb-4">
+            <div class="d-flex flex-column gap-4">
+              <div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-star-fill text-danger"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                  ></path>
+                </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-star-fill text-danger"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                  ></path>
+                </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-star-fill text-danger"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                  ></path>
+                </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-star-fill text-danger"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                  ></path>
+                </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-star-fill text-danger"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="h4">
+                  Teaching materials and explanations are very good.
+                </h3>
+                <p class="mb-0">
+                  Thank you for your teaching this month, your teaching
+                  materials and explanations are very good...I also felt your
+                  passion for teaching. I feel that you are all thoughtful and
+                  caring classmates, and I believe you will have a bright
+                  future.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 pb-4">
+            <div class="d-flex flex-column gap-4">
+              <div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-star-fill text-danger"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                  ></path>
+                </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-star-fill text-danger"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                  ></path>
+                </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-star-fill text-danger"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                  ></path>
+                </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-star-fill text-danger"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                  ></path>
+                </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-star-fill text-danger"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="h4">
+                  Excellent tutoring session, great presentation, professional,
+                  polite.
+                </h3>
+                <p class="mb-0">
+                  Thank you so much today for such an excellent tutoring
+                  session! You guys surprised me with such great presentation!
+                  You are very thorough and clear when explaining things. You
+                  are both professional and polite. And you answered all our
+                  questions!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Footer-->
+    {% include 'tutoring_student/large-footer.html' %}
   </body>
 
   <!-- BootstrapJS -->
@@ -238,5 +542,4 @@
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"
   ></script>
-
 </html>

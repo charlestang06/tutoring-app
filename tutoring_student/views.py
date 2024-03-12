@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from django.shortcuts import redirect, render, get_object_or_404
 from django.template import loader
 from django.http import HttpResponse, Http404
@@ -68,10 +68,17 @@ def get_events(tutoringSessionList):
         events.append(event)
     return events
 
+def send_confirmation_email(context, email):
+    html = loader.render_to_string(
+                "tutoring_student/sessionConfirmation.html", context
+            )
+    send_html_mail("Iridium Tutoring | Tutoring Session Confirmation", html, [email], "noreply@iridiumtutoring.org")
 #### VIEWS ####
 
 def index(request):
-    context = {"tutoringSessionList": get_tutoring_sessions()}
+    context = {"tutoringSessionList": get_tutoring_sessions(), 
+               "minDate": str((datetime.datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")),
+               "maxDate": str((datetime.datetime.now() + timedelta(days=60)).strftime("%Y-%m-%d"))}
     request.session["index"] = True
     return render(request, "tutoring_student/index.html", context)
 
@@ -124,9 +131,10 @@ def studentView(request):
         tutoringSessionList = TutoringSession.objects.filter(student=student).order_by(
             "date"
     )
-
+        
     context = {
         "tutoringSessionList": tutoringSessionList,
+        "student" : student,
         "user": check_student(request.user),
         "error": error,
     }
@@ -211,6 +219,7 @@ def sessionConfirmation(request):
     description = request.POST["description"].strip()
     gradeLevel = request.POST["gradeLevel"].strip()
     preferredPlatform = request.POST["preferredPlatform"]
+    sendMail = True if request.POST["sendMail"] == "on" else False
 
     student = Student.objects.filter(studentName__contains=name, email__contains=email).first()
     if student is None:
@@ -220,7 +229,6 @@ def sessionConfirmation(request):
 
         # Create tutor object
         student = Student(user=user, studentName=name, email=email)
-
         student.save()
 
     t = TutoringSession(
@@ -245,10 +253,8 @@ def sessionConfirmation(request):
         context["error_message"] = "You already registered for a session at this time."
     else:
         try:
-            html = loader.render_to_string(
-                "tutoring_student/sessionConfirmation.html", context
-            )
-            send_html_mail("Iridium Tutoring | Tutoring Session Confirmation", html, [email], "noreply@iridiumtutoring.org")
+            if sendMail:
+                send_confirmation_email(context, email)
             t.save()
         except:
             context["error_message"] = (

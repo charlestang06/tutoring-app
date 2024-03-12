@@ -1,8 +1,8 @@
-# Iridium Tutoring Dashboard
+# Tutoring App
 
-[Iridium Tutoring](https://www.iridiumtutoring.org) is a nationwide 501(c)(3) nonprofit tutoring organization serving K-12 students with free, personalized educational support in all subjects. Our mission is to provide high-quality, accessible, and equitable tutoring to students in need, regardless of their background or financial status. We are committed to helping students reach their full potential and achieve academic success.
+This Django tutoring app was developed as a tutor/student portal for [Iridium Tutoring](https://www.iridiumtutoring.org), a nationwide 501(c)(3) nonprofit tutoring organization serving K-12 students with free, personalized educational support in all subjects. Our mission is to provide high-quality, accessible, and equitable tutoring to students in need, regardless of their background or financial status. We are committed to helping students reach their full potential and achieve academic success.
 
-This dashboard is a B2C tutor + student web application that streamlines the tutoring session registration process and tutor sign-up process and replaces Excel/Google-Sheets/Forms platforms. Utilizes Model-View-Template (MVT) architecture for models `Tutors`, `Students`, and `Tutoring-Sessions`; views `studentView`, `tutorView`, `index`, `etc`; and Bootstrapped configuratble templates for each view. Developed by the 2024 Iridium Tutoring's founder, Charles Tang. 
+This dashboard is a B2C tutor + student web application that streamlines the tutoring session registration process and tutor sign-up process and replaces Excel/Google-Sheets/Forms platforms. Utilizes Model-View-Template (MVT) architecture for models `Tutors`, `Students`, and `Tutoring-Sessions`; views `studentView`, `tutorView`, `index`, `etc`; and Bootstrapped configurable templates for each view. Developed by the 2024 Iridium Tutoring's founder, Charles Tang. 
 
 ## Tech Stack
 - **Frontend**: HTML, CSS (Bootstrap 5.0), JavaScript, FullCalendar
@@ -17,13 +17,10 @@ Italicized features are prioritized for implementation. These are ordered in ter
 - [x] (MVP #4) Tutor session dashboard (custom auth login/logout, see available sessions, see historical sessions,  sign up for sessions, past taken sessions, *add session / recurring sessions utility*, calendar view)
 - [x] Deployed onto CPanel, configured DNS for a subdomain (portal.iridiumtutoring.org), 90-day SSL from Let's Encrypt Provider (HTTPS)
 - [x] Tutor profile dashboard (volunteering hours)
-- [ ] Admin improved dashboard (sort by model, create new tutor form, create new session form)
-- [ ] CI/CD pipeline for automatic deployment from GitHub to CPanel, pre-prod server for staging
-- [ ] TDD (Test-Driven Development) for all views, forms, models, and URLs
+- [x] CI/CD pipeline for semi-automatic deployment from GitHub to CPanel, pre-prod server for staging
 
-## Notes
-
-Since we are deploying with a MySQL remote database, we will prototype on the local SQLite database. This is not ideal, but it is the best we can do with our current resources. 
+## Contributing
+Fork this repository and create a new branch for your feature. Once you are done, create a pull request to merge your branch into the main branch.
 
 ## How To Run
 We assume you have the latest version of Python installed.
@@ -48,7 +45,7 @@ We assume you have the latest version of Python installed.
 ```bash
     python manage.py runserver
 ```
-## How to Deploy to CPanel
+## Deploy to CPanel
 1. Run the app on your local machine and ensure it works. (see previous steps)
 2. Connect to CPanel and create a new MySQL database. Create a new user and assign the user to the database. Ensure the user has all privileges.
 3. Under CPanel `Domains` tool, create a new subdomain (i.e. portal.iridiumtutoring.org) on your CPanel. Link it to the directory public_html/portal, or the directory of your choice.
