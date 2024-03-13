@@ -94,12 +94,10 @@
             <strong>Student:</strong> {{ tutoringSession.student.studentName }}
           </li>
           <li>
-            <strong>Subject:</strong> {{ tutoringSession.subject }} - {{
-            tutoringSession.description }}
+            <strong>Subject:</strong> {{ tutoringSession.subject }} - {{ tutoringSession.description }}
           </li>
           <li>
-            <strong>Date:</strong> {{ tutoringSession.date }} - {{
-            tutoringSession.time }} ({{ tutoringSession.duration }} hours)
+            <strong>Date:</strong> {{ tutoringSession.date }} - {{ tutoringSession.time }} ({{ tutoringSession.duration }} hours)
           </li>
           {% if tutoringSession.tutor %}
           <li>
@@ -126,7 +124,7 @@
           <input type="hidden" name="cancel" value="True" />
           <button
             type="submit"
-            class="btn btn-danger btn-lg mb-3"
+            class="btn btn-orange text-white fw-bold rounded-pill btn-lg mb-3"
             role="button"
           >
             Cancel Session
@@ -144,7 +142,7 @@
         {% endif %}
 
         <a
-          class="btn btn-primary btn-lg"
+          class="btn btn-secondary btn-lg rounded-pill"
           href="{% url 'tutoring_student:studentView' %}"
           role="button"
           >Go Back</a
@@ -152,9 +150,6 @@
       </div>
       {% endif %} {% endif %}
     </div>
-
-    <!-- Footer-->
-    {% include 'tutoring_student/footer.html' %}
   </body>
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

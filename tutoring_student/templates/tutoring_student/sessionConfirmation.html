@@ -8,7 +8,9 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-    <title>Iridium Tutoring</title>
+    <title>Iridium Tutoring | Session Confirmation</title>
+    {% load static %}
+    <link href="{% static 'tutoring_student/style.css' %}" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
@@ -31,16 +33,14 @@
                       <li><strong>Date:</strong> {{ tutoringSession.date }} - {{ tutoringSession.time }} ({{ tutoringSession.duration }} hours)</li>
                   </ul>
                   <p class="lead">A tutor will reach out soon about the details of your session. If you have any questions, please contact us at <a href="mailto:iridiumtutoring@gmail.com">iridiumtutoring@gmail.com</a>.</p>
+                  <p class="lead">NOTICE: Please save the session details for your convenience. You may login to the Student Portal with your student name and email to see all sessions registered for.</p>
                   {% if button %}
-                  <a class="btn btn-primary btn-lg" href="{% url 'tutoring_student:index' %}" role="button">Back to Home</a>
+                  <a class="btn btn-dark-purple rounded-pill text-white fw-bold" href="{% url 'tutoring_student:studentView' %}" role="button">Go to Student Portal</a>
                   {% endif %}
               </div>
           {% endif %}
       {% endif %}
   </div>
-
-  <!-- Footer-->
-  {% include 'tutoring_student/footer.html' %}
   </body>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 

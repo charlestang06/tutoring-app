@@ -17,10 +17,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {% load static %}
     <link href="{% static 'tutoring_student/style.css' %}" rel="stylesheet" />
+    <script>
+      var i = 0;
+      var text = "Free, unlimited tutoring.";
+
+      function typeWriter() {
+          if (i <= text.length) {
+              var element =  document.getElementById("typewriter");
+              element.innerHTML = text.substring(0, i);
+              i++;
+              setTimeout(typeWriter, Math.random() * 35 + 35);
+          }
+      }
+    </script>
   </head>
 
   <!-- Body -->
-  <body>
+  <body onload="typeWriter();">
     <!-- Nav Bar-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
@@ -78,8 +91,8 @@
             <div
               class="d-flex flex-column gap-3 text-center text-md-start pt-5 pb-5"
             >
-              <div class=>
-              <h1 class="text-white mb-3 display-5 fw-bold">
+              <div>
+              <h1 class="text-white mb-3 display-2 fw-bold" id="typewriter">
                 Free, unlimited tutoring.
               </h1>
               <p class="mb-0 lead text-white">
@@ -334,7 +347,7 @@
                 </select>
               </div>
 
-              <div class="mb-3 d-flex align-items-center">
+              {% comment %} <div class="mb-3 d-flex align-items-center">
                 <label for="sendMail" class="form-label mb-0"
                   >Send Confirmation Email?</label
                 >
@@ -345,7 +358,7 @@
                   type="checkbox"
                   id="sendMail"
                 />
-              </div>
+              </div> {% endcomment %}
 
               <div class="mb-3 pb-4">
                 <input

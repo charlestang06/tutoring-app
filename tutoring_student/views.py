@@ -73,6 +73,7 @@ def send_confirmation_email(context, email):
                 "tutoring_student/sessionConfirmation.html", context
             )
     send_html_mail("Iridium Tutoring | Tutoring Session Confirmation", html, [email], "noreply@iridiumtutoring.org")
+
 #### VIEWS ####
 
 def index(request):
@@ -253,8 +254,7 @@ def sessionConfirmation(request):
         context["error_message"] = "You already registered for a session at this time."
     else:
         try:
-            if sendMail:
-                send_confirmation_email(context, email)
+            send_confirmation_email(context, email)
             t.save()
         except:
             context["error_message"] = (
