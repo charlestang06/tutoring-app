@@ -9,6 +9,7 @@ class Student(models.Model):
     """
     Model for a student.
     """
+
     def __str__(self):
         return self.studentName
 
@@ -24,12 +25,15 @@ class Student(models.Model):
     howDidYouHear = models.CharField(max_length=100, null=True, blank=True)
     additionalComments = models.TextField(null=True, blank=True)
 
+
 class Tutor(models.Model):
     """
     Model for a tutor.
     """
+
     def __str__(self):
         return self.tutorName
+
     # Personal Information
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     tutorName = models.CharField(max_length=100)
@@ -39,16 +43,32 @@ class Tutor(models.Model):
     onBoardingDate = models.DateField("Date Onboarded", null=True, blank=True)
     description = models.CharField(max_length=100, null=True, blank=True)
 
+
 class TutoringSession(models.Model):
     """
     Model for a tutoring session.
     """
+
     def __str__(self):
-        return self.student.studentName + " - " + str(self.date) + " - " + str(self.time) + " - " + self.subject
+        return (
+            self.student.studentName
+            + " - "
+            + str(self.date)
+            + " - "
+            + str(self.time)
+            + " - "
+            + self.subject
+        )
+
     # Session Information
     date = models.DateField("Date of Session")
     time = models.TimeField("Time of Session")
-    duration = models.DecimalField("Duration of Session (Hours)", max_digits = 2, decimal_places = 1, validators=[MaxValueValidator(1.5)] )
+    duration = models.DecimalField(
+        "Duration of Session (Hours)",
+        max_digits=2,
+        decimal_places=1,
+        validators=[MaxValueValidator(1.5)],
+    )
     subject = models.CharField(max_length=100)
     description = models.TextField("Further Description of Student Needs")
     gradeLevel = models.CharField(max_length=100)
@@ -61,3 +81,9 @@ class TutoringSession(models.Model):
     # Useful Functions
     def was_in_the_past(self):
         return self.date < timezone.now().date()
+
+    def is_today(self):
+        return self.date == timezone.now().date()
+
+    def has_tutor(self):
+        return self.tutor is not None

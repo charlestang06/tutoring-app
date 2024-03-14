@@ -1,7 +1,6 @@
 import threading
 from django.core.mail import EmailMessage
 
-
 class EmailThread(threading.Thread):
     def __init__(self, subject, html_content, recipient_list, sender):
         self.subject = subject
