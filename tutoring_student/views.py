@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from django.shortcuts import redirect, render, get_object_or_404
 from django.template import loader
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseNotFound
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -201,6 +201,8 @@ def register_recurring_session(request, data):
         raise Http404("Data fields missing.")
     if data["startDate"] >= data["endDate"]:
         raise Http404("Start date must be before end date.")
+    if data["startDate"] < str(datetime.datetime.now().date()):
+        raise Http404("Start date must be in the future.")
 
     try:
         # Create recurring session object
@@ -415,11 +417,19 @@ def session_details_tutor(request, session_id):
         raise Http404("Session does not exist")
     if request.method == "POST":
         claim = request.POST.get("claim", "")
+        cancel = request.POST.get("cancel", "")
         if claim == "True":
             session.tutor = tutor
         elif claim == "False":
             session.tutor = None
         session.save()
+        
+        if cancel == "True":
+            try:
+                session.delete()
+            except:
+                raise Http404("There was an error canceling the session.")
+            return redirect("tutoring_student:tutorView")
 
     context = {"tutoringSession": session, "tutor": tutor}
     return render(request, "tutoring_student/session-tutor.html", context)
@@ -502,9 +512,7 @@ def tutorRecurrings(request):
         try:
             recurring = register_recurring_session(request, data)
         except Exception as e:
-            print(e)
-            raise Http404("There was an error creating the recurring session.")
-
+            return Http404(e)
     recurringSessions = RecurringSession.objects.filter(tutor=tutor)
     allStudents = Student.objects.all()
     context = {

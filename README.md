@@ -14,7 +14,7 @@ Italicized features are prioritized for implementation. These are ordered in ter
 - [x] (MVP #1) Admin dashboard (manage tutor, student, and session registrations)
 - [x] (MVP #2) Student session registration (sign up for tutoring sessions, email confirmation, automatic account generation)
 - [x] (MVP #3) Student dashboard (custom auth login/logout, see past/upcoming sessions, register session, see session details, see tutor details, cancel session)
-- [x] (MVP #4) Tutor session dashboard (custom auth login/logout, see available sessions, see historical sessions,  sign up for sessions, past taken sessions, *add session / recurring sessions utility*, calendar view)
+- [x] (MVP #4) Tutor session dashboard (custom auth login/logout, see available sessions, see historical sessions,  sign up for sessions, past taken sessions, add session / recurring sessions utility, calendar view)
 - [x] Deployed onto CPanel, configured DNS for a subdomain (portal.iridiumtutoring.org), 90-day SSL from Let's Encrypt Provider (HTTPS)
 - [x] Tutor profile dashboard (volunteering hours)
 - [x] CI/CD pipeline for semi-automatic deployment from GitHub to CPanel, pre-prod server for staging

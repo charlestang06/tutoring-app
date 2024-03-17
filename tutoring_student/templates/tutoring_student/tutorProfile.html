@@ -90,7 +90,7 @@
               </thead>
               <tbody>
                 {% for session in tutoringSessions %}
-                {% if session.was_in_past %}
+                {% if session.was_in_the_past %}
                 <tr>
                   <td>{{ session.student.studentName }}</td>
                   <td>{{ session.date }}</td>

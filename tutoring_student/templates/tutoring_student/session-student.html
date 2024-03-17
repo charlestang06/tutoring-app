@@ -20,57 +20,60 @@
   <body>
     <!-- Nav Bar-->
     {% load static %}
+    <!-- Nav Bar-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-inverse">
       <div class="container-fluid">
-        <a class="navbar-brand" href="https://www.iridiumtutoring.org"
-          ><img
-            src="{% static 'tutoring_student/images/iridiumbannerheader.png' %}"
-            class="img-fluid"
-            style="height: 3rem"
-            alt="Iridium Tutoring Logo"
-        /></a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavAltMarkup"
-          aria-controls="navbarNavAltMarkup"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+        <a class="navbar-brand" href="https://www.iridiumtutoring.org"><img src="{% static 'tutoring_student/images/iridiumbannerheader.png' %}" class="img-fluid" style="height: 3rem" alt="Iridium Tutoring Logo" /></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-link" href="{% url 'tutoring_student:index' %}"
-              >Home</a
-            >
-            <a
-              class="nav-link active"
-              aria-current="page"
-              href="{% url 'tutoring_student:studentView' %}"
-              >Student Portal</a
-            >
+            <a class="nav-link fw-bold" href="{% url 'tutoring_student:index' %}">Home</a>
+            <a class="nav-link active fw-bold" aria-current="page" href="{% url 'tutoring_student:studentView' %}">Students</a>
+         </div>
+        </div>
+        
+            <!-- Align with right side of navbar -->
+          <div class="nav navbar-nav ml-auto mr-0">
+            {% if not user %}
+            <a class="nav-link fw-bold" href="https://www.iridiumtutoring.org">Back To Main Site</a>
+            {% endif %}
+            {% if user %}
+            <a href="{% url 'tutoring_student:student_logout' %}">
+                <button class="btn btn-outline-light"><i class="bi bi-box-arrow-right fw-bold"></i></button>
+            </a>
+            {% endif %}
           </div>
-        </div>
-
-        <!-- Align with right side of navbar -->
-        <div class="nav navbar-nav ml-auto mr-0">
-          {% if not user %}
-          <a class="nav-link" href="https://www.iridiumtutoring.org"
-            >Back To Main Site</a
-          >
-          {% endif %} {% if user %}
-          <a href="{% url 'tutoring_student:student_logout' %}">
-            <button class="btn btn-outline-light">
-              <i class="bi bi-box-arrow-right"></i>
-            </button>
-          </a>
-          {% endif %}
-        </div>
       </div>
     </nav>
     <!-- End Nav Bar-->
+    <!-- Cancel Session Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Are you sure you want to cancel this session?</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            This action is irreversible. If you cancel this session, please make sure to notify the student and the session will be removed permanently from the system.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Go Back</button>
+            <form
+                    method="post"
+                    action="{% url 'tutoring_student:session_details_student' tutoringSession.id%}"
+                  >
+                  {%csrf_token %}
+                  <input type="hidden" name="cancel" value="True" />
+            <button type="submit" class="btn btn-orange rounded-pill text-white fw-bold">Confirm Cancel</button>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>  
+    <!-- Main Body -->
     <div class="container mt-lg-5">
       {% if error_message %}
       <div class="alert alert-danger">
@@ -116,20 +119,17 @@
             >iridiumtutoring@gmail.com</a
           >.
         </p>
-        <form
-          method="post"
-          action="{% url 'tutoring_student:session_details_student' tutoringSession.id%}"
-        >
-          {% csrf_token %}
+        <div>
           <input type="hidden" name="cancel" value="True" />
           <button
             type="submit"
             class="btn btn-orange text-white fw-bold rounded-pill btn-lg mb-3"
             role="button"
+            data-bs-toggle="modal" data-bs-target="#staticBackdrop"
           >
             Cancel Session
           </button>
-        </form>
+          <div>
         {% else %}
         <p class="lead">
           {{tutoringSession.tutor.tutorName}} {% if tutoringSession.isRecurring %} is your designated recurring tutor. Please contact them
