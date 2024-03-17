@@ -132,12 +132,14 @@
         </form>
         {% else %}
         <p class="lead">
-          {{tutoringSession.tutor.tutorName}} has signed up for your session and
+          {{tutoringSession.tutor.tutorName}} {% if tutoringSession.isRecurring %} is your designated recurring tutor. Please contact them
+          with any questions.
+          {% else %} has signed up for your session and
           will reach out soon about the details of your session. If you have any
           questions, feel free to contact us at
           <a href="mailto:iridiumtutoring@gmail.com"
             >iridiumtutoring@gmail.com</a
-          >.
+          >. {% endif %}
         </p>
         {% endif %}
 

@@ -69,6 +69,7 @@
                       <li><strong>Tutor:</strong> {{ tutoringSession.tutor.tutorName }} - <a href="mailto:{{tutoringSession.tutor.email}}">{{tutoringSession.tutor.email}}</a></li>
                       {% endif %}
                   </ul>
+                  {% if not tutoringSession.isRecurring %}
                   {% if not tutoringSession.tutor %}
                   <p class="lead">You may contact the student via their email of phone number to ask any additional questions about their request. If the student asks to change the time/topic, please contact an administrator to update the session accordingly. To claim this session, press the claim session button below and follow up with an email to the student.</p>
                   <form method="post" action="{% url 'tutoring_student:session_details_tutor' tutoringSession.id%}">
@@ -84,6 +85,7 @@
                   </form>
                   {% else %}
                   <p class="lead">{{tutoringSession.tutor.tutorName}} has signed up for this session.</p>
+                  {% endif %}
                   {% endif %}
                   <a class="btn btn-secondary btn-lg rounded-pill mt-3" href="{% url 'tutoring_student:tutorView' %}" role="button">Go Back</a>
               </div>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    {% load static %}
+    <link href="{% static 'tutoring_student/style.css' %}" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title id="title">Iridium Tutoring | Tutor</title>
+    <style>
+      .glow {
+        transition: box-shadow 0.3s ease-in-out;
+      }
+
+      .glow:hover {
+        box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.15); /* Adjust the glow effect */
+      }
+    </style>
+  </head>
+  <body>
+    {% load static %}
+    <!-- Nav Bar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-inverse">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://www.iridiumtutoring.org"
+          ><img
+            src="{% static 'tutoring_student/images/iridiumbannerheader.png' %}"
+            class="img-fluid"
+            style="height: 3rem"
+            alt="Iridium Tutoring Logo"
+        /></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a
+              class="nav-link fw-bold"
+              href="{% url 'tutoring_student:index' %}"
+              >Home</a
+            >
+            <a
+              class="nav-link fw-bold"
+              href="{% url 'tutoring_student:tutorView' %}"
+              >Tutors</a
+            >
+            <a
+              class="nav-link fw-bold"
+              href="{% url 'tutoring_student:tutorProfile' %}"
+              >Profile</a
+            >
+            <a
+              class="nav-link active fw-bold"
+              aria-current="page"
+              href="{% url 'tutoring_student:tutorUtilities' %}"
+              >Utilities</a
+            >
+          </div>
+        </div>
+        <!-- Align with right side of navbar -->
+        <div class="nav navbar-nav ml-auto mr-0">
+          {% if not user %}
+          <a class="nav-link fw-bold" href="https://www.iridiumtutoring.org"
+            >Back To Main Site</a
+          >
+          {% endif %} 
+          {% if user %}
+          <a href="{% url 'tutoring_student:tutor_logout' %}">
+            <button class="btn btn-outline-light">
+              <i class="bi bi-box-arrow-right fw-bold"></i>
+            </button>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+    {% if user %}
+    <div class="container mt-5 mx-auto">
+      <h1 class="text-center">Your Current Recurrings</h1>
+      <hr />
+      <div
+        class="row pt-4 pb-4 gap-5 align-items-md-stretch justify-content-md-center align-items-center justify-content-center"
+      >
+        <!-- Info Hub Link -->
+        {% for recurring in recurringSessions %}
+        {% if not recurring.was_in_the_past %}
+        <div class="card glow col-lg-3 col-8">
+          <div class="card-body">
+            <h5 class="card-title">{{recurring.student.studentName}} - {{recurring.subject}}</h5>
+            <p class="card-text">
+              {{recurring.dayOfWeek}}s at {{recurring.time}} for
+              {{recurring.duration}} hours <br>
+              <strong>From:</strong> {{recurring.startDate}} 
+              <br>
+              <strong>To:</strong> {{recurring.endDate}}
+              <br>
+              <strong>Additional Notes:</strong><br>
+              {{recurring.description}}
+            </p>
+            <a
+              href="{% url 'tutoring_student:recurring_details' recurring.id %}"
+              class="btn btn-dark-purple rounded-pill text-white fw-bold"
+              >More Information</a
+            >
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Past recurrings -->
+    <div class="container mt-5 mx-auto">
+      <h1 class="text-center">Your Past Recurrings</h1>
+      <hr />
+      <div
+        class="row pt-4 pb-4 gap-5 align-items-md-stretch justify-content-md-center align-items-center justify-content-center"
+      >
+        <!-- Info Hub Link -->
+        {% for recurring in recurringSessions %}
+        {% if recurring.was_in_the_past %}
+        <div class="card glow col-lg-3 col-8">
+          <div class="card-body">
+            <h5 class="card-title">{{recurring.student.studentName}} - {{recurring.subject}}</h5>
+            <p class="card-text">
+              {{recurring.dayOfWeek}}s at {{recurring.time}} for
+              {{recurring.duration}} hours <br>
+              <strong>From:</strong> {{recurring.startDate}} 
+              <br>
+              <strong>To:</strong> {{recurring.endDate}}
+              <br>
+              <strong>Additional Notes:</strong><br>
+              {{recurring.description}}
+            </p>
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Form to create a new recurring -->
+    <section>
+      <div class="container mt-5">
+        <h1 class="text-center">Create A Recurring</h1>
+        <hr />
+
+        <div class="row justify-content-md-center">
+          <div class="col d-none d-md-block"></div>
+          <div class="col-12 col-md-6">
+            <form
+              action="{% url 'tutoring_student:tutorRecurrings' %}"
+              method="post"
+              class="container mt-5"
+            >
+              {% csrf_token %}
+
+              <div class="mb-3">
+                <label for="studentName" class="form-label">Student</label>
+                <select
+                  type="text"
+                  name="studentName"
+                  id="studentName"
+                  class="form-select"
+                  required
+                >
+                {% for student in allStudents %}
+                  <option value="{{student.studentName}}">{{student.studentName}}</option>
+                {% endfor %}
+                </select>
+                <div id="nameHelp" class="form-text">
+                  If the student name does not exist, please ask them to register for at least one session with Iridium Tutoring.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="dayOfWeek" class="form-label">Day Of Week</label>
+                <select
+                  name="dayOfWeek"
+                  id="dayOfWeek"
+                  class="form-select"
+                  required
+                >
+                  <option value="Monday">Monday</option>
+                  <option value="Tuesday">Tuesday</option>
+                  <option value="Wednesday">Wednesday</option>
+                  <option value="Thursday">Thursday</option>
+                  <option value="Friday">Friday</option>
+                  <option value="Saturday">Saturday</option>
+                  <option value="Sunday">Sunday</option>
+                </select>
+                <div id="dayOfWeekHelp" class="form-text">
+                  To register for multiple days of the week, you must submit a separate recurrings form for each day.
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="time" class="form-label">Time (EST)</label>
+                <input
+                  type="time"
+                  name="time"
+                  id="time"
+                  class="form-control"
+                  value="{{time}}"
+                  required
+                />
+                <div id="timeHelp" class="form-text">
+                  Even if your times change by day, place an approximate time for our records.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="duration" class="form-label"
+                  >Duration (hours)</label
+                >
+                <select
+                  name="duration"
+                  id="duration"
+                  class="form-select"
+                  type="number"
+                  value="{{duration}}"
+                  required
+                >
+                  <option value="0.5">0.5</option>
+                  <option value="1">1</option>
+                  <option value="1.5">1.5</option>
+                </select>
+                <div id="durationHelp" class="form-text">
+                  Most commonly, sessions are 0.5, 1, or 1.5 hours.
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input
+                  type="date"
+                  name="startDate"
+                  id="startDate"
+                  class="form-control"
+                  value="{{startDate}}"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="endDate" class="form-label">End Date</label>
+                <input
+                  type="date"
+                  name="endDate"
+                  id="endDate"
+                  class="form-control"
+                  value="{{endDate}}"
+                  required
+                />
+                <div id="dateHelp" class="form-text">
+                  Please ensure your end date is after your start date.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="subject" class="form-label"
+                  >Selected Topic from Dropdown</label
+                >
+                <select name="subject" id="subject" class="form-select" required>
+                  <option value="Math">Math</option>
+                  <option value="Science">Science</option>
+                  <option value="English">English</option>
+                  <option value="History">History</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Standardized Tests">
+                    Standardized Tests (SAT/AP)
+                  </option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="description" class="form-label"
+                  >Topic Description</label
+                >
+                <textarea
+                  name="description"
+                  id="description"
+                  class="form-control"
+                  required
+                >
+{{description}}</textarea
+                >
+                <div id="topicHelp" class="form-text">
+                  Please specify the specific topic to be covered. (i.e. SAT
+                  Math - Right Angle Geometry)
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="gradeLevel" class="form-label"
+                  >Student Grade Level</label
+                >
+                <input
+                  type="text"
+                  name="gradeLevel"
+                  id="gradeLevel"
+                  class="form-control"
+                  placeholder="K-12"
+                  value="{{gradeLevel}}"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="platform" class="form-label"
+                  >Platform</label
+                >
+                <select
+                  name="platform"
+                  id="platform"
+                  class="form-select"
+                  required
+                >
+                  <option value="Zoom">Zoom</option>
+                  <option value="Google Meet">Google Meet</option>
+                </select>
+              </div>
+
+              <div class="mb-3 pb-4">
+                <input
+                  type="submit"
+                  value="Submit"
+                  class="btn btn-dark-purple rounded-pill text-white fw-bold"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="col d-none d-md-block"></div>
+        </div>
+      </div>
+    </section>
+
+    {% endif %}
+
+    
+    <!-- Footer-->
+    {% include 'tutoring_student/footer.html' %}
+  </body>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+  ></script>
+</html>

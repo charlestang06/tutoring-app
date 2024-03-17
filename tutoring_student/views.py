@@ -176,6 +176,64 @@ def send_confirmation_email(context, email):
     )
 
 
+def register_recurring_session(request, data):
+    """Register recurring session given form data
+
+    Args:
+        request (Django HTTP request): passed from previous view
+        data (dict): form data
+    """
+
+    # Check validity of form data (Start/End data, nullity)
+    if (
+        data["startDate"] == ""
+        or data["tutor"] == None
+        or data["endDate"] == ""
+        or data["student"] == None
+        or data["dayOfWeek"] == ""
+        or data["time"] == ""
+        or data["duration"] == ""
+        or data["subject"] == ""
+        or data["description"] == ""
+        or data["gradeLevel"] == ""
+        or data["platform"] == ""
+    ):
+        raise Http404("Data fields missing.")
+    if data["startDate"] >= data["endDate"]:
+        raise Http404("Start date must be before end date.")
+
+    try:
+        # Create recurring session object
+        recurring = RecurringSession(
+            student=data["student"],
+            tutor=data["tutor"],
+            dayOfWeek=data["dayOfWeek"],
+            time=data["time"],
+            duration=data["duration"],
+            startDate=data["startDate"],
+            endDate=data["endDate"],
+            subject=data["subject"],
+            description=data["description"],
+            gradeLevel=data["gradeLevel"],
+            preferredPlatform=data["platform"],
+        )
+
+        # Check if recurring session already exists
+        if not RecurringSession.objects.filter(
+            student=data["student"],
+            dayOfWeek=data["dayOfWeek"],
+            time=data["time"],
+            startDate=data["startDate"],
+        ).first():
+            recurring.save()  # Save recurring session so Many-To-Many relationship can be established
+            recurring.generate_sessions()
+            return recurring
+        return None
+    except Exception as e:
+        print(e)
+        raise Http404("There was an error generating the sessions.")
+
+
 #### VIEWS ####
 
 
@@ -391,6 +449,96 @@ def tutorProfile(request):
     return render(request, "tutoring_student/tutorProfile.html", context)
 
 
+@user_passes_test(check_tutor)
+def tutorUtilities(request):
+    """Tutor utilities view
+
+    Args:
+        request (Django HTTP request): passed from previous view
+
+    Returns:
+        tutorUtilities: render tutorUtilities.html with context
+    """
+    try:
+        tutor = get_tutor(request, request.user)
+    except:
+        raise Http404("You are not authorized to access this page.")
+    context = {"tutor": tutor, "user": tutor != None}
+    return render(request, "tutoring_student/tutorUtilities.html", context)
+
+
+@user_passes_test(check_tutor)
+def tutorRecurrings(request):
+    """Tutor recurrings view
+
+    Args:
+        request (Django HTTP request): passed from previous view
+
+    Returns:
+        tutorRecurrings: render tutorRecurrings.html with context
+    """
+
+    try:
+        tutor = get_tutor(request, request.user)
+    except:
+        raise Http404("You are not authorized to access this page.")
+
+    # Get form data from create recurrings
+    if request.method == "POST":
+        name = request.POST.get("studentName", "").strip()
+        data = {
+            "student": Student.objects.get(studentName=name),
+            "tutor": tutor,
+            "dayOfWeek": request.POST.get("dayOfWeek", "").strip(),
+            "time": request.POST.get("time", "").strip(),
+            "duration": request.POST.get("duration", 1).strip(),
+            "startDate": request.POST.get("startDate", "").strip(),
+            "endDate": request.POST.get("endDate", "").strip(),
+            "subject": request.POST.get("subject", "").strip(),
+            "description": request.POST.get("description", "").strip(),
+            "gradeLevel": request.POST.get("gradeLevel", "").strip(),
+            "platform": request.POST.get("platform", "").strip(),
+        }
+        try:
+            recurring = register_recurring_session(request, data)
+        except Exception as e:
+            print(e)
+            raise Http404("There was an error creating the recurring session.")
+
+    recurringSessions = RecurringSession.objects.filter(tutor=tutor)
+    allStudents = Student.objects.all()
+    context = {
+        "tutor": tutor,
+        "user": tutor != None,
+        "recurringSessions": recurringSessions,
+        "allStudents": allStudents,
+    }
+    return render(request, "tutoring_student/tutorRecurrings.html", context)
+
+
+@user_passes_test(check_tutor)
+def recurring_details(request, recurring_id):
+    """Recurring details view
+
+    Args:
+        request (Django HTTP request): passed from previous view
+        recurring_id (int): foreign key for recurring session object
+
+    Raises:
+        Http404: if recurring session does not exist or tutor is not authorized
+
+    Returns:
+        recurring_details: render recurring_details.html with context
+    """
+    try:
+        tutor = get_tutor(request, request.user)
+    except:
+        raise Http404("You are not authorized to access this page.")
+    recurring = get_object_or_404(RecurringSession, pk=recurring_id)
+    context = {"recurring": recurring, "tutor": tutor, "user": tutor != None}
+    return render(request, "tutoring_student/recurring_details.html", context)
+
+
 def sessionConfirmation(request):
     """
     Session confirmation view
@@ -457,7 +605,7 @@ def sessionConfirmation(request):
     # Send confirmation email and save tutoring session object
     else:
         try:
-            send_confirmation_email(context, email)
+            # send_confirmation_email(context, email)
             t.save()
         except:
             context["error_message"] = (

@@ -70,6 +70,7 @@
             <a class="nav-link active fw-bold" aria-current="page" href="{% url 'tutoring_student:tutorView' %}">Tutors</a>
             {% if user %}
             <a class="nav-link fw-bold" href="{% url 'tutoring_student:tutorProfile' %}">Profile</a>
+            <a class="nav-link fw-bold" href="{% url 'tutoring_student:tutorUtilities' %}">Utilities</a>
             {% endif %}
          </div>
         </div>
@@ -112,7 +113,7 @@
       </div>
     </section>
 
-    <!-- Show all tutoring sessions-->
+    <!-- Show all non-recurring tutoring sessions-->
     <div class="container mt-3">
       <h2 class="text-center mt-5">Your Upcoming Tutoring Sessions</h2>
       <div class="row justify-content-md-center mt-5 mb-5">
@@ -124,6 +125,9 @@
           <a href="{% url 'tutoring_student:session_details_tutor' session.id %}" class="list-group-item list-group-item-action"
             ><div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">{{session.student.studentName}} - {{session.subject}} (Grade {{session.gradeLevel}})</h5>
+              {% if session.isRecurring %}
+              <span class="badge bg-secondary align-self-start">Recurring</span>
+              {% endif %}
             </div>
               <small>{{session.date}} - {{session.time}} ({{session.duration}} hours)</small>
 
@@ -140,7 +144,7 @@
       {% if tutoringSessionList %}
       <div class="list-group col-12 col-md-7">
         {% for session in tutoringSessionList %}
-        {% if not session.was_in_the_past %}
+        {% if not session.was_in_the_past and not session.isRecurring %}
           <a href="{% url 'tutoring_student:session_details_tutor' session.id %}" class="list-group-item list-group-item-action"
             ><div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">{{session.student.studentName}} - {{session.subject}} (Grade {{session.gradeLevel}})</h5>

@@ -14,5 +14,8 @@ urlpatterns = [
     path("studentPortal/session-student/<int:session_id>/", views.session_details_student, name="session_details_student"),
     path("tutorPortal/session-tutor/<int:session_id>/", views.session_details_tutor, name="session_details_tutor"),
     path("tutorPortal/profile", views.tutorProfile, name="tutorProfile"),
+    path("tutorPortal/utilities", views.tutorUtilities, name="tutorUtilities"),
+    path("tutorPortal/utilities/recurrings", views.tutorRecurrings, name="tutorRecurrings"),
+    path("tutorPortal/utilities/recurrings/<int:recurring_id>/", views.recurring_details, name="recurring_details"),
     path("session-confirmation/", views.sessionConfirmation, name="register_session"),
 ]

@@ -80,8 +80,10 @@
               <h5 class="mb-1">{{session.student.studentName}} - {{session.subject}} (Grade {{session.gradeLevel}})</h5>
               {% if session.was_in_the_past %}
               <span class="badge bg-secondary align-self-start">Past</span>
+              {% elif session.isRecurring %}
+              <span class="badge btn-dark-purple align-self-start">Upcoming (Recurring)</span>
               {% elif session.tutor %}
-              <span class="badge bg-dark-purple align-self-start">Upcoming (Tutor Confirmed)</span>
+              <span class="badge btn-dark-purple align-self-start">Upcoming (Tutor Confirmed)</span>
               {% else %}
               <span class="badge btn-orange text-white align-self-start">Upcoming (Tutor Pending)</span>
               {% endif %}

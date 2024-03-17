@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    {% load static %}
+    <link href="{% static 'tutoring_student/style.css' %}" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title id="title">Iridium Tutoring | Tutor</title>
+    <style>
+      .glow {
+        transition: box-shadow 0.3s ease-in-out;
+      }
+
+      .glow:hover {
+        box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.15); /* Adjust the glow effect */
+      }
+    </style>
+  </head>
+  <body>
+    {% load static %}
+    <!-- Nav Bar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-inverse">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://www.iridiumtutoring.org"
+          ><img
+            src="{% static 'tutoring_student/images/iridiumbannerheader.png' %}"
+            class="img-fluid"
+            style="height: 3rem"
+            alt="Iridium Tutoring Logo"
+        /></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a
+              class="nav-link fw-bold"
+              href="{% url 'tutoring_student:index' %}"
+              >Home</a
+            >
+            <a
+              class="nav-link fw-bold"
+              href="{% url 'tutoring_student:tutorView' %}"
+              >Tutors</a
+            >
+            <a
+              class="nav-link fw-bold"
+              href="{% url 'tutoring_student:tutorProfile' %}"
+              >Profile</a
+            >
+            <a
+              class="nav-link active fw-bold"
+              aria-current="page"
+              href="{% url 'tutoring_student:tutorUtilities' %}"
+              >Utilities</a
+            >
+          </div>
+        </div>
+        <!-- Align with right side of navbar -->
+        <div class="nav navbar-nav ml-auto mr-0">
+          {% if not user %}
+          <a class="nav-link fw-bold" href="https://www.iridiumtutoring.org"
+            >Back To Main Site</a
+          >
+          {% endif %} {% if user %}
+          <a href="{% url 'tutoring_student:tutor_logout' %}">
+            <button class="btn btn-outline-light">
+              <i class="bi bi-box-arrow-right fw-bold"></i>
+            </button>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+    {% if user %}
+    <div class="container mt-5 mx-auto">
+      <h1 class="text-center">Tutor Utilities</h1>
+      <hr />
+      <div
+        class="row pt-4 pb-4 gap-5 align-items-md-stretch justify-content-md-center align-items-center justify-content-center"
+      >
+        <!-- Info Hub Link -->
+        <div class="card glow col-lg-3 col-8">
+          <img
+            class="card-img-top mt-3 img-fluid"
+            src="{% static 'tutoring_student/images/discord.jpeg' %}"
+            alt="Discord Logo"
+            style="height: 120px; object-fit: cover"
+          />
+          <div class="card-body">
+            <h5 class="card-title">Discord Server</h5>
+            <p class="card-text">
+              Internal server for communication between board of directors,
+              staff, and tutors. Strictly invite-only.
+            </p>
+            <a
+              href="https://discord.com/invite/CtuKrbN"
+              target="_blank"
+              class="btn btn-dark-purple rounded-pill text-white fw-bold"
+              >Server Invite</a
+            >
+          </div>
+        </div>
+        <!-- Internal Discord Server -->
+        <div class="card glow col-lg-3 col-8">
+          <img
+            class="card-img-top mt-3 img-fluid"
+            src="{% static 'tutoring_student/images/iridiumbannerpink.png' %}"
+            alt="Iridium Logo"
+            style="height: 120px; object-fit: cover"
+          />
+          <div class="card-body">
+            <h5 class="card-title">Information Hub</h5>
+            <p class="card-text">
+              Tutorials and <i>How-To</i> information for tutors, onboarding,
+              staff, board of directors, etc.
+            </p>
+            <a
+              href="http://hub.iridiumtutoring.org/"
+              target="_blank"
+              class="btn btn-dark-purple rounded-pill text-white fw-bold"
+              >Take Me There</a
+            >
+          </div>
+        </div>
+
+        <!-- Recurrings Tool -->
+        <div class="card glow col-lg-3 col-8">
+          <img
+            class="card-img-top mt-3 img-fluid"
+            src="{% static 'tutoring_student/images/iridiumbannerpink.png' %}"
+            alt="Iridium Logo"
+            style="height: 120px; object-fit: cover"
+          />
+          <div class="card-body">
+            <h5 class="card-title">Recurrings</h5>
+            <p class="card-text">
+              Create, read, update, destroy (CRUD) your upcoming/past recurring sessions.
+            </p>
+            <a
+              href="{% url 'tutoring_student:tutorRecurrings' %}"
+              class="btn btn-dark-purple rounded-pill text-white fw-bold"
+              >Go To Tool</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    <!-- Footer-->
+    {% include 'tutoring_student/footer.html' %}
+  </body>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+  ></script>
+</html>
