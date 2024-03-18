@@ -2,7 +2,7 @@
 
 This Django tutoring app was developed as a tutor/student portal for [Iridium Tutoring](https://www.iridiumtutoring.org), a nationwide 501(c)(3) nonprofit tutoring organization serving K-12 students with free, personalized educational support in all subjects. Our mission is to provide high-quality, accessible, and equitable tutoring to students in need, regardless of their background or financial status. We are committed to helping students reach their full potential and achieve academic success.
 
-This dashboard is a B2C tutor + student web application that streamlines the tutoring session registration process and tutor sign-up process and replaces Excel/Google-Sheets/Forms platforms. Utilizes Model-View-Template (MVT) architecture for models `Tutors`, `Students`, and `Tutoring-Sessions`; views `studentView`, `tutorView`, `index`, `etc`; and Bootstrapped configurable templates for each view. Developed by the 2024 Iridium Tutoring's founder, Charles Tang. 
+This dashboard is a B2C tutor + student web application that streamlines the tutoring session registration process and tutor sign-up process and replaces Excel/Google-Sheets/Forms platforms. Utilizes Model-View-Template (MVT) architecture for models `Tutors`, `Students`,  `Tutoring-Sessions`, and `Recurring-Sessions`; views `studentView`, `tutorView`, `index`, `etc`; and Bootstrapped configurable templates for each view. Developed by the 2024 Iridium Tutoring's founder, Charles Tang. 
 
 ## Tech Stack
 - **Frontend**: HTML, CSS (Bootstrap 5.0), JavaScript, FullCalendar
@@ -13,10 +13,10 @@ This dashboard is a B2C tutor + student web application that streamlines the tut
 Italicized features are prioritized for implementation. These are ordered in terms of priority.
 - [x] (MVP #1) Admin dashboard (manage tutor, student, and session registrations)
 - [x] (MVP #2) Student session registration (sign up for tutoring sessions, email confirmation, automatic account generation)
-- [x] (MVP #3) Student dashboard (custom auth login/logout, see past/upcoming sessions, register session, see session details, see tutor details, cancel session)
-- [x] (MVP #4) Tutor session dashboard (custom auth login/logout, see available sessions, see historical sessions,  sign up for sessions, past taken sessions, add session / recurring sessions utility, calendar view)
+- [x] (MVP #3) Student dashboard (custom auth login/logout, see past/upcoming sessions/recurrings, register session, see session details, see tutor details, cancel session)
+- [x] (MVP #4) Tutor session dashboard (custom auth login/logout, see available sessions, see historical sessions, sign up for sessions, past taken sessions, add/manage recurring sessions utility, calendar view, profile dashboard)
+- [ ] (MVP #5) Office hours (landing page, meeting link, tutor availability)
 - [x] Deployed onto CPanel, configured DNS for a subdomain (portal.iridiumtutoring.org), 90-day SSL from Let's Encrypt Provider (HTTPS)
-- [x] Tutor profile dashboard (volunteering hours)
 - [x] CI/CD pipeline for semi-automatic deployment from GitHub to CPanel, pre-prod server for staging
 
 ## Contributing

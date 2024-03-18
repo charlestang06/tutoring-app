@@ -100,6 +100,22 @@ def get_tutor(request, user):
     return tutor
 
 
+def get_student(request, user):
+    """Get student object from request or user
+
+    Args:
+        request (Django HTTP request): passed from previous view
+        user (Django user object): passed from previous view
+
+    Returns:
+        Student: student object if user is a student, None otherwise
+    """
+    student = None
+    if check_student(user) or (check_student(request.user)):
+        student = Student.objects.get(user=request.user)
+    return student
+
+
 def get_all_tutoring_sessions():
     """Get list of all tutoring sessions
 
@@ -138,7 +154,7 @@ def get_tutoring_session_tutor(tutor):
     return tutoringSessionList
 
 
-def get_events(tutoringSessionList):
+def get_events(tutoringSessionList, tutor):
     """Get list of events for calendar
 
     Args:
@@ -149,14 +165,15 @@ def get_events(tutoringSessionList):
     """
     events = []
     for session in tutoringSessionList:
-        event = {
-            "title": f"{session.student.studentName} - {session.subject}",
-            "start": f"{session.date}T{session.time}",
-            "end": f"{session.date}T{session.time}",
-            "className": "taken-session" if session.tutor else "available-session",
-            "url": session.id,
-        }
-        events.append(event)
+        if session.isRecurring == False or session.tutor == tutor:
+            event = {
+                "title": f"{session.student.studentName} - {session.subject}",
+                "start": f"{session.date}T{session.time}",
+                "end": f"{session.date}T{session.time}",
+                "className": "taken-session" if session.tutor else "available-session",
+                "url": session.id,
+            }
+            events.append(event)
     return events
 
 
@@ -288,7 +305,7 @@ def tutorView(request):
         "user": tutor != None,
         "error": error,
         "tutor": tutor,
-        "events": get_events(tutoringSessionList),
+        "events": get_events(tutoringSessionList, tutor),
     }
 
     return render(request, "tutoring_student/tutorView.html", context)
@@ -377,8 +394,11 @@ def session_details_student(request, session_id):
         session_details_student: render session-student.html with context
     """
     session = get_object_or_404(TutoringSession, pk=session_id)
+    student = get_student(request, request.user)
     if session is None:
         raise Http404("Session does not exist")
+    elif session.student != student:
+        raise Http404("You are not authorized to access this page.")
 
     # Cancel button behavior
     if request.method == "POST":
@@ -408,13 +428,15 @@ def session_details_tutor(request, session_id):
         session_details_tutor: render session-tutor.html with context
     """
     try:
-        tutor = Tutor.objects.get(user=request.user)
+        tutor = get_tutor(request, request.user)
     except Tutor.DoesNotExist:
         raise Http404("You are not authorized to access this page.")
     try:
         session = get_object_or_404(TutoringSession, pk=session_id)
     except:
         raise Http404("Session does not exist")
+    if session.tutor != None and session.tutor != tutor:
+        raise Http404("You are not authorized to access this page.")
     if request.method == "POST":
         claim = request.POST.get("claim", "")
         cancel = request.POST.get("cancel", "")
@@ -423,7 +445,7 @@ def session_details_tutor(request, session_id):
         elif claim == "False":
             session.tutor = None
         session.save()
-        
+
         if cancel == "True":
             try:
                 session.delete()
@@ -621,3 +643,17 @@ def sessionConfirmation(request):
             )
     context["button"] = True
     return render(request, "tutoring_student/sessionConfirmation.html", context)
+
+def officeHours(request):
+    """
+    Office hours view
+
+    Args:
+        request (Django HTTP request): passed from previous view
+
+    Returns:
+        officeHours: render officeHours.html with context
+    """
+    context = {
+    }
+    return render(request, "tutoring_student/officeHours.html", context)
