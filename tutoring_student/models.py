@@ -42,7 +42,8 @@ class Tutor(models.Model):
     phone = models.CharField(max_length=15, null=True)
     onBoardingDate = models.DateField("Date Onboarded", null=True, blank=True)
     description = models.CharField(max_length=100, null=True, blank=True)
-
+    officeHoursHours = models.IntegerField(default=0, blank=True)
+    officeHoursDate = models.DateField("Date of Last Office Hours", null=True, blank=True)
 
 class TutoringSession(models.Model):
     """

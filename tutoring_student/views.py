@@ -477,6 +477,7 @@ def tutorProfile(request):
         "tutoringSessions": tutoringSessions,
         "user": tutor != None,
         "hours": len(tutoringSessions) * 1.5,
+        "officeHours": tutor.officeHoursHours,
     }
     return render(request, "tutoring_student/tutorProfile.html", context)
 
@@ -495,6 +496,19 @@ def tutorUtilities(request):
         tutor = get_tutor(request, request.user)
     except:
         raise Http404("You are not authorized to access this page.")
+    # office hours
+    if request.method == "POST":
+        print(request.POST.get("officeHours", "").strip())
+        officeHours = request.POST.get("officeHours", "").strip() == "I Was There"
+        if officeHours:
+            try:
+                if (tutor.officeHoursDate != datetime.datetime.now().date()):
+                    tutor.officeHoursHours += 1
+                    tutor.officeHoursDate = datetime.datetime.now().date()
+                tutor.save()
+            except:
+                raise Http404("There was an error updating your office hours.")
+    
     context = {"tutor": tutor, "user": tutor != None}
     return render(request, "tutoring_student/tutorUtilities.html", context)
 

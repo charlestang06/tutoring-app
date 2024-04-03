@@ -86,12 +86,12 @@
       >
         <!-- Info Hub Link -->
         <div class="card glow col-lg-3 col-8">
-          <img
+          {% comment %} <img
             class="card-img-top mt-3 img-fluid"
             src="{% static 'tutoring_student/images/discord.jpeg' %}"
             alt="Discord Logo"
             style="height: 120px; object-fit: cover"
-          />
+          /> {% endcomment %}
           <div class="card-body">
             <h5 class="card-title">Discord Server</h5>
             <p class="card-text">
@@ -108,12 +108,63 @@
         </div>
         <!-- Internal Discord Server -->
         <div class="card glow col-lg-3 col-8">
-          <img
+          {% comment %} <img
             class="card-img-top mt-3 img-fluid"
             src="{% static 'tutoring_student/images/iridiumbannerpink.png' %}"
             alt="Iridium Logo"
             style="height: 120px; object-fit: cover"
-          />
+          /> {% endcomment %}
+          <div class="card-body">
+            <h5 class="card-title">Office Hours</h5>
+            <p class="card-text">
+              Click on the button below if you hosted/were at office hours today. It
+              will add 1.5 hours to your hour log.
+            </p>
+            <form 
+              action="{% url 'tutoring_student:tutorUtilities' %}"
+              method="post"
+            >
+            {% csrf_token %}
+            <input
+            type="submit"
+            name="officeHours"
+            id="officeHours"
+            value="I Was There"
+            class="btn btn-dark-purple rounded-pill text-white fw-bold"
+            />
+            </form>
+          </div>
+        </div>
+
+        <!-- Recurrings Tool -->
+        <div class="card glow col-lg-3 col-8">
+          {% comment %} <img
+            class="card-img-top mt-3 img-fluid"
+            src="{% static 'tutoring_student/images/iridiumbannerpink.png' %}"
+            alt="Iridium Logo"
+            style="height: 120px; object-fit: cover"
+          /> {% endcomment %}
+          <div class="card-body">
+            <h5 class="card-title">Recurrings</h5>
+            <p class="card-text">
+              Create, read, update, destroy (CRUD) your upcoming/past recurring
+              sessions.
+            </p>
+            <a
+              href="{% url 'tutoring_student:tutorRecurrings' %}"
+              class="btn btn-dark-purple rounded-pill text-white fw-bold"
+              >Go To Tool</a
+            >
+          </div>
+        </div>
+
+        <div class="card glow col-lg-3 col-8">
+          {% comment %} <img
+            class="card-img-top mt-3 img-fluid"
+            src="{% static 'tutoring_student/images/iridiumbannerpink.png' %}"
+            alt="Iridium Logo"
+            style="height: 120px; object-fit: cover"
+          /> {% endcomment %}
           <div class="card-body">
             <h5 class="card-title">Information Hub</h5>
             <p class="card-text">
@@ -125,27 +176,6 @@
               target="_blank"
               class="btn btn-dark-purple rounded-pill text-white fw-bold"
               >Take Me There</a
-            >
-          </div>
-        </div>
-
-        <!-- Recurrings Tool -->
-        <div class="card glow col-lg-3 col-8">
-          <img
-            class="card-img-top mt-3 img-fluid"
-            src="{% static 'tutoring_student/images/iridiumbannerpink.png' %}"
-            alt="Iridium Logo"
-            style="height: 120px; object-fit: cover"
-          />
-          <div class="card-body">
-            <h5 class="card-title">Recurrings</h5>
-            <p class="card-text">
-              Create, read, update, destroy (CRUD) your upcoming/past recurring sessions.
-            </p>
-            <a
-              href="{% url 'tutoring_student:tutorRecurrings' %}"
-              class="btn btn-dark-purple rounded-pill text-white fw-bold"
-              >Go To Tool</a
             >
           </div>
         </div>

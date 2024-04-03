@@ -60,7 +60,8 @@
             <h5 class="mt-3">Volunteer Hours</h5>
             {% with tutoringSessions|length as len %}
             
-            <p>Your total hours: {{len}} sessions x ~1.5 hours each = {{hours}} total hours.</p>
+            <p>Your tutoring hours: {{len}} sessions x ~1.5 hours each = {{hours}} total hours.</p>
+            <p>Your office hours: {{officeHours}} sessions x ~1 hour each = {{officeHours}} total hours.</p>
             {% if hours > 100 %}
             <p class="text-success">Congratulations! You have exceeded 100 hours of volunteer service! 
               You may qualify for the President's Volunteer Service Award, contact an Iridium director for more information.</p>
