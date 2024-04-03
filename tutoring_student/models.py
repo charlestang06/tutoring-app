@@ -142,7 +142,7 @@ class RecurringSession(models.Model):
         try:
             self.generate_sessions_helper(day=days.index(self.dayOfWeek))
             return True
-        except:
+        except Exception as e:
             return False
 
     def generate_sessions_helper(self, day):
@@ -154,8 +154,8 @@ class RecurringSession(models.Model):
         Returns:
             bool: True if sessions have been generated successfully
         """
-        start = datetime.datetime.strptime(self.startDate, "%Y-%m-%d").date()
-        end = datetime.datetime.strptime(self.endDate, "%Y-%m-%d").date()
+        start = datetime.datetime.strptime(str(self.startDate), "%Y-%m-%d").date()
+        end = datetime.datetime.strptime(str(self.endDate), "%Y-%m-%d").date()
         while start <= end:
             if start.weekday() == day:
                 session = TutoringSession(

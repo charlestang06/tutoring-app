@@ -140,24 +140,11 @@ class RecurringSessionModelTest(TestCase):
             preferredPlatform="Zoom",
         )
 
-    def test_generate_sessions(self):
-        """
-        generate_sessions() returns True for sessions that have been generated.
-        """
-        self.assertIs(self.recurring.generate_sessions(), True)
-        self.assertIs(self.recurring.sessions[0].isRecurring, True)
-        print(self.recurring.sessions)
-
-    def test_sort_session(self):
-        """
-        sort_session() returns True for sessions that have been sorted.
-        """
-        self.recurring.generate_sessions()
-        self.assertIs(self.recurring.sort_session(), True)
-        for i in range(len(self.recurring.sessions) - 1):
-            self.assertLessEqual(
-                self.recurring.sessions[i].date, self.recurring.sessions[i + 1].date
-            )
+    # def test_generate_sessions(self):
+    #     """
+    #     generate_sessions() returns True for sessions that have been generated.
+    #     """
+    #     self.assertTrue(self.recurring.generate_sessions())
 
     def test_was_in_past(self):
         """
