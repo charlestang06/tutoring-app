@@ -6,6 +6,7 @@ dj-database-url==2.1.0
 Django==5.0.3
 django-debug-toolbar==4.3.0
 django-extensions==3.2.3
+django-pwa==1.1.0
 gunicorn==21.2.0
 mypy-extensions==1.0.0
 mysqlclient==2.2.4

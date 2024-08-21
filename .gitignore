@@ -1,5 +1,3 @@
 *.sqlite3
 *.pyc
-.venv/*
 .env
-static/
